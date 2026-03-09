@@ -408,8 +408,9 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 ## Key Resources
 
 ### Essential Documentation
+- [📚 Documentation Index](docs/INDEX.md) - **Master index of all documentation**
 - [Architecture Diagram](docs/Architecture-Diagram.md) - Visual pipeline overview
-- [Lab Setup Guide](docs/#Lab-Setup-Guide.md) - Complete setup instructions
+- [Lab Setup Guide](docs/Lab-Setup-Guide.md) - Complete setup instructions
 - [Port Reference](docs/Port-Reference.md) - All service ports and URLs
 - [Troubleshooting Guide](docs/Troubleshooting.md) - Common issues and solutions
 - [Cleanup Guide](docs/Cleanup-Guide.md) - Teardown procedures
@@ -627,14 +628,14 @@ cp .env.template .env
 - Service port mappings
 - Kubernetes and Kind cluster config
 
-See [Lab Setup Guide](docs/#Lab-Setup-Guide.md#11-configure-environment-variables) for detailed configuration instructions.
+See [Lab Setup Guide](docs/Lab-Setup-Guide.md#11-configure-environment-variables) for detailed configuration instructions.
 
 ## Documentation Glossary
 
 Complete reference to all documentation files in this repository:
 
 ### Setup & Configuration
-- [Lab Setup Guide](docs/#Lab-Setup-Guide.md) - Complete step-by-step laboratory setup (11 phases)
+- [Lab Setup Guide](docs/Lab-Setup-Guide.md) - Complete step-by-step laboratory setup (11 phases)
 - [Project Overview](docs/Project-Overview.md) - Detailed project information and architecture
 - [Architecture Diagram](docs/Architecture-Diagram.md) - Visual pipeline overview
 - [Port Reference](docs/Port-Reference.md) - All service ports and URLs
@@ -653,10 +654,9 @@ Complete reference to all documentation files in this repository:
 - [Kyverno](k8s/kyverno/README.md) - Policy engine and compliance
 
 ### Quick Reference Guides
-- [ArgoCD Quick Setup](docs/argocd-setup.md) - Fast ArgoCD configuration
+- [ArgoCD Quick Setup](docs/ArgoCD-QuickStart.md) - Fast ArgoCD configuration
 - [ArgoCD Repository Setup](docs/ArgoCD_setup-argocd-repo.md) - Repository access configuration
 - [Harbor-Kind Integration](docs/Harbor-Kind-Integration.md) - Connecting Harbor with Kind cluster
-- [Harbor Quick Start](docs/QUICK-START-Harbor-Kind.md) - Rapid Harbor and Kind setup
 - [SonarQube Quick Reference](docs/SonarQube-QuickRef.md) - Common SonarQube operations
 - [SonarQube Setup](docs/SonarQube-Setup.md) - Detailed installation instructions
 

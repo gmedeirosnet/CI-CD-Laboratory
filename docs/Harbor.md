@@ -537,6 +537,14 @@ https://harbor.example.com/metrics
 curl -k https://harbor.example.com/api/v2.0/health
 ```
 
+## Related Documents
+- [Port Reference](Port-Reference.md) - Service ports and access URLs
+- [Troubleshooting Guide](Troubleshooting.md) - Common issues and solutions
+- [Harbor-Kind Integration](Harbor-Kind-Integration.md) - Connecting Harbor with Kind cluster
+- [Harbor-Jenkins Credential Setup](Harbor-Jenkins-Credential-Setup.md) - Jenkins integration
+- [Docker](Docker.md) - Container platform guide
+- [Lab Setup Guide](Lab-Setup-Guide.md) - Complete laboratory setup
+
 ## References
 - Official Documentation: https://goharbor.io/docs/
 - GitHub Repository: https://github.com/goharbor/harbor

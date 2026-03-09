@@ -64,3 +64,13 @@ A strong DevOps engineer also needs foundational skills and supportive collabora
 *   **Project/Process Management:** Tools like **Jira** and **Trello** are used for planning, tracking, and collaboration.
 *   **Communication:** Tools such as **Slack** and **Microsoft Teams** facilitate collaboration, along with real-time forum solutions like **Yammer** or group chat systems like **IRC**.
 *   **Non-Technical Skills:** Learning encompasses non-technical tools and techniques such as **Scrum**, **Kanban**, **Agile**, and **Test-Driven Development (TDD)**.
+
+---
+
+## Related Resources
+
+- [Architecture Diagram](Architecture-Diagram.md) - Visual overview of the complete CI/CD pipeline and tool integration
+- [Port Reference](Port-Reference.md) - All service ports and access URLs for the laboratory environment
+- [Troubleshooting Guide](Troubleshooting.md) - Common issues and solutions when working with DevOps tools
+- [Lab Setup Guide](Lab-Setup-Guide.md) - Complete step-by-step laboratory setup instructions
+- [Project Overview](Project-Overview.md) - Detailed project information and architecture
