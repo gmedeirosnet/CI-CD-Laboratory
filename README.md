@@ -728,4 +728,4 @@ For detailed information, see:
 - [Project Overview](docs/Project-Overview.md) - Complete project details and architecture
 - [Lab Setup Guide](docs/Lab-Setup-Guide.md) - Step-by-step installation instructions
 - [Documentation Index](docs/INDEX.md) - Master index of all documentation
-- [CHANGELOG](CHANGELOG.md) - Project history and version information
+- [CHANGELOG](memory.md) - Project history and version information

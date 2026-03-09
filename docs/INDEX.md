@@ -130,7 +130,7 @@ Project-level documentation and updates.
 | [Documentation Update Summary](DOCUMENTATION-UPDATE-SUMMARY.md) | Recent documentation changes |
 | [Fixes Applied](FIXES-APPLIED.md) | Bug fixes and improvements log |
 | [Java Improvements Plan](plan-java-improvements.md) | Java version upgrade plan |
-| [Changelog](../CHANGELOG.md) | Complete project history and version information |
+| [Changelog](../memory.md) | Complete project history and version information |
 
 ---
 
