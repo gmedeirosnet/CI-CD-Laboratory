@@ -68,7 +68,7 @@ nano .env  # or use your preferred editor
 The `.env` file also defines all service ports:
 - Jenkins: 8080
 - Harbor: 8082 (HTTP), 8443 (HTTPS)
-- SonarQube: 8090
+- SonarQube: 9000
 - ArgoCD: 8090
 - Grafana: 3000
 - Application: 8001

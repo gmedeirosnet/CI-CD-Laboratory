@@ -9,6 +9,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added - Phase 2: Port Configuration Fixes (2026-03-09)
+- Added Application port (8001) to README.md quick access list
+- Added comprehensive health check endpoints table with expected responses for all services
+- Added extensive Docker network vs host networking explanation with practical examples
+- Added comprehensive kubectl port-forward examples section with 20+ usage scenarios
+- Added port mapping rules table explaining container-to-container vs external access
+- Added automated health check testing script examples
+- Enhanced Port-Reference.md with Docker bridge network and Kind network details
+- Added troubleshooting section for port conflicts and network issues
+
+### Changed - Phase 2: Port Configuration Fixes (2026-03-09)
+- **CRITICAL FIX**: Corrected SonarQube port from 8090 to 9000 across all documentation
+  - Updated README.md, Port-Reference.md, Architecture-Diagram.md
+  - Updated SonarQube.md, SonarQube-QuickRef.md, Lab-Setup-Guide.md
+  - Fixed .env.template SONARQUBE_PORT from 8090 to 9000
+  - Resolved port conflict between SonarQube and ArgoCD
+- Standardized ArgoCD port to 8090 (HTTPS) throughout documentation
+  - Clarified ArgoCD uses port 8090 to avoid Jenkins conflict (8080)
+  - Updated Port-Reference.md with clear ArgoCD port mapping explanation
+- Enhanced Port-Reference.md port summary table with accurate internal/external mappings
+- Updated health check endpoints with correct URLs and expected JSON responses
+- Enhanced k8s-permissions_port-forward.sh header documentation:
+  - Added comprehensive purpose and features section
+  - Added troubleshooting guide within script comments
+  - Added exit codes and prerequisites documentation
+  - Added practical usage examples
+  - Updated version to 2.0 with detailed managed services list
+- Clarified port mapping strategy (ArgoCD:8090 avoids Jenkins:8080 conflict)
+- Updated Port Testing Commands section with better examples
+
+### Fixed - Phase 2: Port Configuration Fixes (2026-03-09)
+- Fixed SonarQube port conflict (was incorrectly documented as 8090, conflicting with ArgoCD)
+- Fixed missing Application port (8001) in quick access documentation
+- Fixed inconsistent SonarQube host URLs in code examples (8090 → 9000)
+- Fixed Port-Reference.md table to show correct SonarQube internal/external ports (9000/9000)
+- Fixed health check endpoint URLs for SonarQube and ArgoCD
+- Fixed port conflict documentation and resolution strategies
+
+### Documentation - Phase 2: Port Configuration Fixes (2026-03-09)
+- Updated 7 documentation files with correct SonarQube port (9000)
+- Enhanced Port-Reference.md from ~400 lines to ~850 lines with comprehensive examples
+- Added 120+ lines of kubectl port-forward best practices and examples
+- Added Docker networking conceptual explanations with service-to-service communication patterns
+- Documented port forward PID management strategy (/tmp/k8s-port-forward/*.pid)
+
 ### Added - Phase 1: Documentation Standardization (2026-03-09)
 - Created comprehensive documentation index at `docs/INDEX.md` with 32 guides across 7 categories
 - Added "Related Documents" cross-references to ArgoCD.md, Harbor.md, Jenkins.md, Kind-K8s.md, and StudyPlan.md
@@ -201,12 +246,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## Upcoming Features (Planned)
-
-### Phase 2: Port Configuration Fixes (Planned)
-- Resolve ArgoCD port conflicts (8080 vs 8090)
-- Update all service port references across documentation
-- Create comprehensive port mapping reference
-- Add health check URLs for all services
 
 ### Phase 3: Quick Start Enhancements (Planned)
 - Create `docs/QUICK-START.md` - First 5 minutes guide

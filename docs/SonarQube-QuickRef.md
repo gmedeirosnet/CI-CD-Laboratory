@@ -14,7 +14,7 @@ chmod +x scripts/setup-sonarqube.sh
 
 | Service | URL | Default Credentials |
 |---------|-----|---------------------|
-| SonarQube UI | http://localhost:8090 | admin / admin |
+| SonarQube UI | http://localhost:9000 | admin / admin |
 | Jenkins | http://localhost:8080 | (your Jenkins creds) |
 
 ## Essential Configuration Steps
@@ -65,7 +65,7 @@ docker-compose -f sonar-compose.yml up -d
 
 - [ ] Docker network `cicd-network` exists
 - [ ] Jenkins connected to network
-- [ ] SonarQube running (http://localhost:8090 accessible)
+- [ ] SonarQube running (http://localhost:9000 accessible)
 - [ ] SonarQube password changed
 - [ ] Authentication token generated
 - [ ] Jenkins plugin installed

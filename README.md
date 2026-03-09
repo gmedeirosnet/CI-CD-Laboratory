@@ -141,15 +141,26 @@ The fastest way to get started:
 ./k8s/k8s-permissions_port-forward.sh start
 
 # 4. Access the services:
+# - Application:      http://localhost:8001
 # - Jenkins:          http://localhost:8080
 # - Harbor:           http://localhost:8082
-# - SonarQube:        http://localhost:8090
+# - SonarQube:        http://localhost:9000
 # - Grafana:          http://localhost:3000
 # - Prometheus:       http://localhost:30090
 # - Loki:             http://localhost:31000
 # - ArgoCD:           https://localhost:8090
 # - Policy Reporter:  http://localhost:31002 (UI)
 # - Policy Reporter:  http://localhost:31001 (API)
+#
+# Health Checks:
+# - Application:      http://localhost:8001/actuator/health
+# - Jenkins:          http://localhost:8080/login
+# - Harbor:           http://localhost:8082/api/v2.0/health
+# - SonarQube:        http://localhost:9000/api/system/status
+# - Grafana:          http://localhost:3000/api/health
+# - Prometheus:       http://localhost:30090/-/healthy
+# - Loki:             http://localhost:31000/ready
+# - ArgoCD:           https://localhost:8090/healthz
 
 # 5. (Optional) Install Kyverno policy engine with Policy Reporter:
 cd k8s/kyverno
