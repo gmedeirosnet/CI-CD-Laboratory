@@ -713,4 +713,8 @@ Built on open-source tools maintained by amazing communities. Thanks to all cont
 
 **Start your DevOps learning journey today!**
 
-For detailed information, see [Project Overview](docs/Project-Overview.md) and [Lab Setup Guide](docs/Lab-Setup-Guide.md).
+For detailed information, see:
+- [Project Overview](docs/Project-Overview.md) - Complete project details and architecture
+- [Lab Setup Guide](docs/Lab-Setup-Guide.md) - Step-by-step installation instructions
+- [Documentation Index](docs/INDEX.md) - Master index of all documentation
+- [CHANGELOG](CHANGELOG.md) - Project history and version information

@@ -130,6 +130,7 @@ Project-level documentation and updates.
 | [Documentation Update Summary](DOCUMENTATION-UPDATE-SUMMARY.md) | Recent documentation changes |
 | [Fixes Applied](FIXES-APPLIED.md) | Bug fixes and improvements log |
 | [Java Improvements Plan](plan-java-improvements.md) | Java version upgrade plan |
+| [Changelog](../CHANGELOG.md) | Complete project history and version information |
 
 ---
 
@@ -183,5 +184,4 @@ For complete setup instructions and repository information, see:
 ---
 
 **Last Updated**: 2026-03-09
-**Total Documents**: 32 guides across 7 categories
-**Maintained by**: DevOps Lab Team
+**Total Documents**: 33 guides across 7 categories
