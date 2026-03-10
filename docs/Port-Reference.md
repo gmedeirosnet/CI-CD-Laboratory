@@ -12,17 +12,21 @@ This document provides a comprehensive reference for all network ports used in t
 | **Grafana** | 3000 | 3000 | HTTP | http://localhost:3000 | Observability & Logs UI |
 | **Harbor (HTTP)** | 80 | 8082 | HTTP | http://localhost:8082 | Container registry web UI |
 | **Harbor (HTTPS)** | 443 | 8443 | HTTPS | https://localhost:8443 | Secure container registry |
-| **Loki** | 3100 | 31000 | HTTP | http://localhost:31000 | Log aggregation API |
-| **Kyverno** | 8000 | - | HTTP | - | Policy engine metrics |
-| **kube-state-metrics** | 8080 | - | HTTP | - | K8s object metrics |
-| **Kind API Server** | 6443 | 6443 | HTTPS | https://127.0.0.1:6443 | Kubernetes API |
-| **Kind Dashboard** | - | 30000-32767 | HTTP | http://localhost:30xxx | K8s NodePort services |
-| **node-exporter** | 9100 | - | HTTP | - | Node/system metrics |
 | **Jenkins** | 8080 | 8080 | HTTP | http://localhost:8080 | CI/CD orchestration |
 | **Jenkins (Agent)** | 50000 | 50000 | TCP | - | Agent communication |
-| **Promtail** | 9080 | - | HTTP | - | Log collector metrics |
+| **Kind API Server** | 6443 | 6443 | HTTPS | https://127.0.0.1:6443 | Kubernetes API |
+| **Kyverno** | 8000 | - | HTTP | - | Policy engine metrics |
+| **Loki** | 3100 | 31000 | HTTP | http://localhost:31000 | Log aggregation API |
+| **Policy Reporter UI** | 8080 | 31002 | HTTP | http://localhost:31002 | Policy violation dashboard |
+| **Policy Reporter API** | 8080 | 31001 | HTTP | http://localhost:31001 | Policy violation API |
 | **Prometheus** | 9090 | 30090 | HTTP | http://localhost:30090 | Metrics & monitoring |
-| **SonarQube** | 9000 | 8090 | HTTP | http://localhost:8090 | Code quality analysis |
+| **SonarQube** | 9000 | 9000 | HTTP | http://localhost:9000 | Code quality analysis |
+
+**Note on Port Mappings**:
+- **Internal Port**: Port the service listens on inside the container/pod
+- **External Port**: Port exposed on localhost for access from your machine
+- **ArgoCD 8090**: Avoids conflict with Jenkins (8080), used by automated script
+- **Loki/Prometheus**: NodePort mappings match external ports for consistency
 
 ## Automated Port Forwarding
 
@@ -125,19 +129,26 @@ Environment Variables:
 
 ```yaml
 Port:
-  External: 8090
+  External: 9000
   Internal: 9000
   Protocol: HTTP
-  URL: http://localhost:8090
+  URL: http://localhost:9000
 
 Environment Variables:
-  SONAR_HOST: http://localhost:8090
-  SONAR_PORT: 8090
+  SONAR_HOST: http://localhost:9000
+  SONAR_PORT: 9000
+
+Docker Network:
+  Jenkins communicates using container name: http://sonarqube:9000
+  Host access uses: http://localhost:9000
+
+Health Check:
+  URL: http://localhost:9000/api/system/status
+  Expected Response: {"status":"UP"}
 
 Note:
-  - External access uses port 8090 to avoid conflicts
-  - Internal container port remains 9000
-  - Jenkins should use container name: http://sonarqube:9000
+  - Both external and internal ports are 9000 (no port mapping)
+  - Jenkins uses Docker network name 'sonarqube' for internal communication
 
 Database:
   Internal Port: 5432 (PostgreSQL)
@@ -295,14 +306,13 @@ Kubernetes Service:
 
 ```yaml
 Server Port:
-  External: 8081 (HTTP - automated script)
-  External: 8080 (HTTP - manual)
-  External: 8443 (HTTPS - manual)
-  Internal: 80/443
+  External: 8090 (HTTPS - automated script)
+  Internal: 443 (HTTPS)
+  Protocol: HTTPS
 
 API Server:
-  URL: localhost:8081 (automated) or localhost:8080 (manual)
-  gRPC Port: 8080
+  URL: https://localhost:8090
+  gRPC Port: 8080 (internal only)
 
 Repo Server:
   Internal Port: 8081
@@ -315,23 +325,33 @@ Metrics:
 
 Namespace:
   argocd (Kind K8s)
+
+Health Check:
+  URL: https://localhost:8090/healthz
+  Expected Response: {"status":"Healthy"}
 ```
 
-**Automated Access**:
+**Automated Access (Recommended)**:
 ```bash
 # Start port forward (includes Docker permission fix)
-./scripts/k8s-permissions_port-forward.sh start
+./k8s/k8s-permissions_port-forward.sh start
 
 # Access UI
-open http://localhost:8081
+open https://localhost:8090
 ```
 
 **Manual Port Forward Command**:
 ```bash
-kubectl port-forward svc/argocd-server -n argocd 8080:443
+# Note: Use port 8090 to match automated setup and avoid Jenkins conflict (8080)
+kubectl port-forward -n argocd svc/argocd-server 8090:443
 ```
 
-**Note**: Automated script uses port 8081 to avoid conflict with Jenkins (8080)
+**Port Mapping Explanation**:
+- **Kubernetes Service**: argocd-server runs on port 443 (HTTPS) inside the cluster
+- **Port Forward**: kubectl forwards localhost:8090 → cluster:443
+- **Why 8090?**: Avoids conflict with Jenkins (8080) and provides consistent access URL
+
+**Note**: Automated script uses port 8090 to avoid conflict with Jenkins (8080). For manual setup, always use 8090 for consistency.
 
 ---
 
@@ -441,17 +461,81 @@ pkill -f "process-name"
 
 ## Docker Network Configuration
 
+### Understanding Port Mappings
+
+**Host Network vs Docker Network**:
+
+```yaml
+Host Network (localhost):
+  - Used for external access from your machine
+  - Example: http://localhost:8080 (Jenkins UI in browser)
+  - Port mappings: HOST_PORT:CONTAINER_PORT
+
+Docker Internal Network:
+  - Used for container-to-container communication
+  - Example: http://jenkins:8080 (from another container)
+  - No port mapping needed - direct container name resolution
+
+Kubernetes Network:
+  - Used for pod-to-pod or pod-to-service communication
+  - Example: http://myapp.default.svc.cluster.local:8080
+  - Port forwarding needed for external access
+```
+
+**Practical Examples**:
+
+```bash
+# 1. Docker Container accessing Jenkins
+# From another container on same network:
+curl http://jenkins:8080/api/json
+
+# From host machine (your browser):
+curl http://localhost:8080/api/json
+
+# 2. Jenkins accessing SonarQube
+# Jenkins uses Docker network - container name:
+SONAR_HOST_URL=http://sonarqube:9000
+
+# You access from browser - localhost:
+http://localhost:9000
+
+# 3. Jenkins accessing Harbor
+# Jenkins pushes to: host.docker.internal:8082
+# You access UI at: http://localhost:8082
+
+# 4. Kind cluster accessing host services
+# Use special hostname: host.docker.internal
+# Example: Harbor registry at host.docker.internal:8082
+```
+
+**Port Mapping Rules**:
+
+| Service | Container Port | Host Port | Container-to-Container URL | External URL |
+|---------|---------------|-----------|---------------------------|--------------|
+| Jenkins | 8080 | 8080 | http://jenkins:8080 | http://localhost:8080 |
+| Harbor | 80 | 8082 | http://harbor:80 | http://localhost:8082 |
+| SonarQube | 9000 | 9000 | http://sonarqube:9000 | http://localhost:9000 |
+| PostgreSQL | 5432 | - (not exposed) | http://postgres:5432 | N/A (internal only) |
+
 ### Bridge Network
 
 ```yaml
-Network: bridge (default)
-Subnet: 172.17.0.0/16
+Network: cicd-network (custom bridge)
+Subnet: 172.17.0.0/16 (default bridge)
 Gateway: 172.17.0.1
 
 Containers can communicate using:
-  - Container names (DNS)
-  - IP addresses
-  - Exposed ports on host
+  - Container names (DNS resolution)
+  - IP addresses (less reliable, can change)
+  - Exposed ports on host (via localhost)
+
+Created by:
+  docker network create cicd-network
+
+Connected containers:
+  - Jenkins
+  - Harbor (core, db, redis, jobservice, registry)
+  - SonarQube + SonarQube DB
 ```
 
 ### Kind Network
@@ -464,6 +548,32 @@ Subnet: (dynamically assigned)
 Container Communication:
   - All Kind nodes in same network
   - Can access host via host.docker.internal
+  - Isolated from other Docker networks
+
+Special Hostname:
+  host.docker.internal → Docker host (your machine)
+
+Use Cases:
+  - Pods pulling from Harbor: host.docker.internal:8082
+  - ArgoCD accessing Git on host
+  - Accessing services running on Docker Desktop
+```
+
+### Host Access from Containers
+
+```yaml
+macOS/Windows Docker Desktop:
+  Hostname: host.docker.internal
+  Example: curl http://host.docker.internal:8080
+
+Linux:
+  Add to docker run: --add-host=host.docker.internal:host-gateway
+  Or use: 172.17.0.1 (Docker gateway)
+
+Common Use Cases:
+  - Kind cluster → Harbor (host.docker.internal:8082)
+  - Jenkins → ArgoCD (host.docker.internal:8090)
+  - Container → Service on host
 ```
 
 ---
@@ -536,16 +646,32 @@ Pod to Service:
 
 | Service | Endpoint | Expected Response |
 |---------|----------|-------------------|
+| Application | http://localhost:8001/actuator/health | {"status":"UP"} |
 | Jenkins | http://localhost:8080/login | 200 OK |
-| Harbor | http://localhost:8082/api/v2.0/health | 200 OK |
-| SonarQube | http://localhost:8090/api/system/health | 200 OK |
-| Grafana | http://localhost:3000/api/health | 200 OK |
+| Harbor | http://localhost:8082/api/v2.0/health | {"status":"healthy"} |
+| SonarQube | http://localhost:9000/api/system/status | {"status":"UP"} |
+| Grafana | http://localhost:3000/api/health | {"database":"ok"} |
 | Loki | http://localhost:31000/ready | ready |
 | Prometheus | http://localhost:30090/-/ready | Prometheus is Ready. |
 | Prometheus (Healthy) | http://localhost:30090/-/healthy | Prometheus is Healthy. |
-| Application | http://localhost:8001/health | 200 OK |
-| ArgoCD | http://localhost:8081/healthz | 200 OK |
+| ArgoCD | https://localhost:8090/healthz | {"status":"Healthy"} |
 | Kind API | kubectl get --raw='/healthz' | ok |
+
+**Testing Health Checks**:
+```bash
+# Test all services at once
+for service in "Application:8001/actuator/health" "Jenkins:8080/login" "Harbor:8082/api/v2.0/health" "SonarQube:9000/api/system/status"; do
+    IFS=':' read -r name port_path <<< "$service"
+    echo -n "$name: "
+    curl -s -o /dev/null -w "%{http_code}" "http://localhost:$port_path" || echo "FAILED"
+    echo
+done
+
+# Test Kubernetes services
+kubectl get --raw='/healthz'
+kubectl get --raw='/livez'
+kubectl get --raw='/readyz'
+```
 
 ---
 
@@ -579,6 +705,142 @@ kubectl get svc --all-namespaces
 # Kind cluster ports
 docker ps | grep kind
 ```
+
+---
+
+## Kubectl Port-Forward Examples
+
+### Basic Port Forwarding
+
+```bash
+# Format: kubectl port-forward [TYPE/NAME] [LOCAL_PORT]:[REMOTE_PORT] -n [NAMESPACE]
+
+# Forward to a pod
+kubectl port-forward pod/my-pod 8080:80 -n default
+
+# Forward to a service (recommended - survives pod restarts)
+kubectl port-forward svc/my-service 8080:80 -n default
+
+# Forward to a deployment
+kubectl port-forward deployment/my-deployment 8080:80 -n default
+```
+
+### Lab-Specific Examples
+
+```bash
+# ArgoCD Server (HTTPS)
+kubectl port-forward -n argocd svc/argocd-server 8090:443
+# Access: https://localhost:8090
+
+# Loki (Log aggregation)
+kubectl port-forward -n logging svc/loki 31000:3100
+# Access: http://localhost:31000
+
+# Prometheus (Metrics)
+kubectl port-forward -n monitoring svc/prometheus 30090:9090
+# Access: http://localhost:30090
+
+# Application (if deployed in namespace)
+kubectl port-forward -n app-demo svc/cicd-demo-app 8001:8001
+# Access: http://localhost:8001
+
+# PostgreSQL (database)
+kubectl port-forward -n app-demo svc/postgres 5432:5432
+# Access: postgresql://localhost:5432
+
+# Kyverno Metrics
+kubectl port-forward -n kyverno svc/kyverno-svc-metrics 8002:8000
+# Access: http://localhost:8002/metrics
+
+# Policy Reporter UI
+kubectl port-forward -n policy-reporter svc/policy-reporter-ui 31002:8080
+# Access: http://localhost:31002
+```
+
+### Advanced Port-Forward Scenarios
+
+```bash
+# Background process with output redirection
+kubectl port-forward svc/loki 31000:3100 -n logging > /tmp/port-forward-loki.log 2>&1 &
+echo $! > /tmp/port-forward-loki.pid
+
+# Multiple ports for same service
+kubectl port-forward svc/jenkins 8080:8080 50000:50000
+
+# Listen on all interfaces (DANGEROUS - use with caution)
+kubectl port-forward --address 0.0.0.0 svc/my-service 8080:80
+
+# Specific pod selection
+kubectl port-forward $(kubectl get pod -n argocd -l app.kubernetes.io/name=argocd-server -o jsonpath='{.items[0].metadata.name}') 8090:8080 -n argocd
+```
+
+### Managing Port Forwards
+
+```bash
+# List active port forwards
+ps aux | grep "kubectl port-forward"
+
+# Kill specific port forward
+pkill -f "port-forward.*loki"
+
+# Kill all kubectl port forwards
+pkill -f "kubectl port-forward"
+
+# Check if port forward is working
+lsof -i :8090
+
+# Restart port forward programmatically
+PORT_FORWARD_PID=$(pgrep -f "port-forward.*argocd")
+if [ -n "$PORT_FORWARD_PID" ]; then
+    kill $PORT_FORWARD_PID
+fi
+kubectl port-forward svc/argocd-server 8090:443 -n argocd &
+```
+
+### Port Forward Best Practices
+
+```yaml
+DO:
+  - Use services (svc/) instead of pods for stability
+  - Use background processes (&) for automation
+  - Store PIDs for clean shutdown
+  - Check port availability before forwarding (lsof)
+  - Use specific namespaces (-n flag)
+
+DON'T:
+  - Forward to 0.0.0.0 in production
+  - Hardcode pod names (they change)
+  - Leave orphaned port-forward processes
+  - Use same local port for multiple services
+```
+
+### Automated Script Usage
+
+This lab includes an automated port-forward management script:
+
+```bash
+# Start all required port forwards
+./k8s/k8s-permissions_port-forward.sh start
+
+# Check status
+./k8s/k8s-permissions_port-forward.sh status
+
+# Stop all
+./k8s/k8s-permissions_port-forward.sh stop
+
+# Restart
+./k8s/k8s-permissions_port-forward.sh restart
+
+# Cleanup orphaned processes
+./k8s/k8s-permissions_port-forward.sh cleanup
+```
+
+**Managed Services**:
+- Loki: localhost:31000 → logging/loki:3100
+- Prometheus: localhost:30090 → monitoring/prometheus:9090
+- ArgoCD: localhost:8090 → argocd/argocd-server:443
+
+**PID Tracking**: PIDs stored in `/tmp/k8s-port-forward/*.pid`
 
 ---
 

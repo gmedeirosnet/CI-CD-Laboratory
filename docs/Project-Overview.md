@@ -5,7 +5,7 @@ This repository contains a comprehensive learning laboratory for DevOps CI/CD de
 
 ## Structure
 
-### AI Directory (`/ai`)
+### Instructions Directory (`/instructions`)
 JSON configuration files for AI-assisted learning and automation:
 - `instructions.json` - Project guidelines and objectives
 - `tools.json` - Detailed tool catalog with learning priorities

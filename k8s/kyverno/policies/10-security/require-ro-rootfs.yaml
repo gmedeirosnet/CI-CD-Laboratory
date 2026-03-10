@@ -1,3 +1,72 @@
+# Policy: Require Read-Only Root Filesystem
+#
+# Purpose:
+#   Enforces read-only root filesystem for containers to prevent
+#   malware persistence and enforce immutable infrastructure.
+#
+# Validation Mode: Audit (logs violations, allows deployment)
+#
+# Security Impact: MEDIUM
+#   - Prevents malware from modifying container filesystem
+#   - Blocks persistence of unauthorized changes
+#   - Enforces immutable infrastructure principles
+#   - Limits post-compromise damage
+#
+# Why Read-Only Root Filesystem Matters:
+#   - Malware can't persist across container restarts
+#   - Prevents tampering with application binaries
+#   - Enforces declarative configuration
+#   - Simplifies security auditing
+#
+# Implementation Requirements:
+#   - Mount temporary volumes for writable directories
+#   - Common writable paths: /tmp, /var/cache, /var/run
+#   - Application-specific cache directories
+#
+# Exempted Namespaces:
+#   - kube-system, kube-public, kube-node-lease
+#   - kyverno, argocd, monitoring, logging
+#
+# Example Violation:
+#   spec:
+#     containers:
+#     - name: app
+#       image: nginx
+#       # No readOnlyRootFilesystem = writable
+#
+# Example Compliant:
+#   spec:
+#     containers:
+#     - name: app
+#       image: nginx
+#       securityContext:
+#         readOnlyRootFilesystem: true
+#       volumeMounts:
+#       - name: tmp
+#         mountPath: /tmp
+#       - name: cache
+#         mountPath: /var/cache/nginx
+#     volumes:
+#     - name: tmp
+#       emptyDir: {}
+#     - name: cache
+#       emptyDir: {}
+#
+# Common Writable Directories:
+#   - /tmp - Temporary files
+#   - /var/cache - Application cache
+#   - /var/run - Runtime data (PID files, sockets)
+#   - /var/log - Application logs (use stdout/stderr instead)
+#
+# Migration Strategy:
+#   1. Identify writable directories (run container, check errors)
+#   2. Add emptyDir volumes for each writable path
+#   3. Test application functionality
+#   4. Enable readOnlyRootFilesystem
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md (Container Security section)
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:

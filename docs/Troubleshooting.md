@@ -993,3 +993,595 @@ docker-compose restart
 # Clean restart
 docker-compose down && docker-compose up -d
 ```
+
+---
+
+## Problem Diagnosis Decision Tree
+
+Use these decision trees to systematically diagnose common issues.
+
+### Decision Tree 1: Service Not Accessible
+
+```
+Is the service not accessible?
+├─YES→ Is it a Kubernetes service?
+│      ├─YES→ Are port forwards running?
+│      │      ├─YES→ Is the pod running?
+│      │      │      ├─YES→ Check pod logs: `kubectl logs <pod> -n app-demo`
+│      │      │      │       └─ Check service endpoints: `kubectl get ep -n app-demo`
+│      │      │      └─NO→ Why is pod not running?
+│      │      │             └─ Check: `kubectl describe pod <pod> -n app-demo`
+│      │      │                  ├─ ImagePullBackOff → Fix image name/registry
+│      │      │                  ├─ CrashLoopBackOff → Check logs
+│      │      │                  ├─ Pending → Check resources/PVC
+│      │      │                  └─ Error → Check pod events
+│      │      └─NO→ Start port forwarding:
+│      │             `./k8s/k8s-permissions_port-forward.sh start`
+│      └─NO→ Is it a Docker Compose service?
+│             ├─YES→ Is the container running?
+│             │      ├─YES→ Check port mapping:
+│             │      │       `docker port <container>`
+│             │      └─NO→ Start the service:
+│             │             `docker-compose up -d <service>`
+│             └─NO→ Check firewall/network:
+│                    `curl -v http://localhost:<port>`
+```
+
+### Decision Tree 2: Pod Failure Diagnosis
+
+```
+Is your pod failing?
+├─YES→ What is the pod status?
+│      ├─ ImagePullBackOff
+│      │  └─> Is it a registry issue?
+│      │      ├─YES→ Check registry is accessible
+│      │      │      ├─ Harbor: `curl http://localhost:8082`
+│      │      │      └─ Login: `docker login localhost:8082`
+│      │      └─NO→ Is the image name correct?
+│      │             └─ Check: `kubectl describe pod <pod> -n app-demo`
+│      │                  Look for "Failed to pull image"
+│      │
+│      ├─ CrashLoopBackOff
+│      │  └─> Check pod logs:
+│      │      `kubectl logs <pod> -n app-demo --previous`
+│      │      Common causes:
+│      │      ├─ Application error → Fix code
+│      │      ├─ Database connection failed → Check DB
+│      │      ├─ Missing environment variables → Check ConfigMap/Secret
+│      │      └─ Port already in use → Check port conflicts
+│      │
+│      ├─ Pending
+│      │  └─> Check pod events:
+│      │      `kubectl describe pod <pod> -n app-demo`
+│      │      Common causes:
+│      │      ├─ Insufficient CPU/Memory → Scale nodes or reduce requests
+│      │      ├─ PVC not bound → Check `kubectl get pvc -n app-demo`
+│      │      ├─ Node selector mismatch → Check node labels
+│      │      └─ Admission webhook denied → Check Kyverno policies
+│      │
+│      ├─ Error
+│      │  └─> Pod configuration issue
+│      │      Check: `kubectl get pod <pod> -n app-demo -o yaml`
+│      │      Common causes:
+│      │      ├─ Invalid container spec
+│      │      ├─ Missing volume mount
+│      │      ├─ Invalid security context
+│      │      └─ Wrong resource limits format
+│      │
+│      └─ OOMKilled (Out of Memory)
+│         └─> Increase memory limits:
+│             `kubectl edit deployment <name> -n app-demo`
+│             Update:
+│             resources:
+│               limits:
+│                 memory: "1Gi"  # Increase from current
+```
+
+### Decision Tree 3: Pipeline Failure Diagnosis
+
+```
+Is your Jenkins pipeline failing?
+├─YES→ Which stage is failing?
+│      ├─ Checkout
+│      │  └─> GitHub credentials correct?
+│      │      ├─YES→ Check repository URL
+│      │      └─NO→ Update credentials in Jenkins
+│      │
+│      ├─ Build (Maven)
+│      │  └─> What error?
+│      │      ├─ "mvn: command not found"
+│      │      │  └─ Install Maven in Jenkins container or use Maven Docker image
+│      │      ├─ "Could not resolve dependencies"
+│      │      │  └─ Check internet connection, clear Maven cache
+│      │      ├─ "Compilation failed"
+│      │      │  └─ Check Java version, verify code compiles locally
+│      │      └─ "Tests failed"
+│      │         └─ Run tests locally, fix failures
+│      │
+│      ├─ SonarQube Analysis
+│      │  └─> Connection issue?
+│      │      ├─ "Connection refused"
+│      │      │  └─ Use `http://sonarqube:9000` (not localhost)
+│      │      │     Both containers must be on same network
+│      │      ├─ "Unauthorized"
+│      │      │  └─ Check SonarQube token in Jenkins credentials
+│      │      └─ "Quality gate failed"
+│      │         └─ Review issues in SonarQube UI, adjust rules
+│      │
+│      ├─ Docker Build
+│      │  └─> Permission denied?
+│      │      ├─YES→ Fix Docker socket permissions:
+│      │      │      `docker exec -u root jenkins chmod 666 /var/run/docker.sock`
+│      │      └─NO→ Check Dockerfile syntax, build context
+│      │
+│      ├─ Harbor Push
+│      │  └─> Authentication issue?
+│      │      ├─YES→ Check Harbor robot account credentials
+│      │      └─NO→ Check Harbor project exists, registry is insecure-registry
+│      │
+│      └─ ArgoCD Sync
+│         └─> Sync failed?
+│             ├─ Check ArgoCD application status
+│             ├─ Verify Git repository accessible
+│             ├─ Check Helm chart syntax
+│             └─ Review ArgoCD logs
+```
+
+### Decision Tree 4: Database Connection Issues
+
+```
+Cannot connect to database?
+├─YES→ Is PostgreSQL pod running?
+│      ├─YES→ Can you connect from pod?
+│      │      ├─YES→ Connection string correct?
+│      │      │      ├─YES→ Credentials correct?
+│      │      │      │      ├─YES→ Connection pool exhausted?
+│      │      │      │      │      └─ Run: `./scripts/test-db-pool.sh`
+│      │      │      │      └─NO→ Check password in secret
+│      │      │      └─NO→ Verify:
+│      │      │             Host: postgres
+│      │      │             Port: 5432
+│      │      │             Database: cicd_demo
+│      │      └─NO→ Network issue
+│      │             ├─ Check service: `kubectl get svc postgres -n app-demo`
+│      │             └─ Test connectivity: `kubectl exec -n app-demo postgres-0 -- nc -zv postgres 5432`
+│      └─NO→ Start PostgreSQL:
+│             └─ Check: `kubectl get pod postgres-0 -n app-demo`
+│                  ├─ Not exist → Deploy: `./scripts/deploy-fullstack.sh`
+│                  └─ Failing → Check: `kubectl describe pod postgres-0 -n app-demo`
+│
+└─NO→ Other database issue?
+       └─ Run database tests: `./scripts/test-db-pool.sh`
+```
+
+---
+
+## Checklist Before Reporting an Issue
+
+Before opening a GitHub issue or asking for help, please complete this checklist. This helps you resolve issues faster and provides useful information if you need to report a bug.
+
+### Step 1: Basic Verification
+
+- [ ] Docker Desktop is running
+  ```bash
+  docker ps
+  ```
+- [ ] You have sufficient disk space (>20GB free)
+  ```bash
+  df -h
+  ```
+- [ ] You have sufficient RAM (>8GB)
+  ```bash
+  free -h  # Linux
+  vm_stat  # macOS
+  ```
+- [ ] You are using the correct branch
+  ```bash
+  git branch
+  ```
+- [ ] Your code is up to date
+  ```bash
+  git pull origin main
+  ```
+
+### Step 2: Environment Check
+
+- [ ] Verify prerequisites are met
+  ```bash
+  ./scripts/verify-environment.sh
+  ```
+- [ ] Check all expected services are running
+  ```bash
+  docker ps --format "table {{.Names}}\t{{.Status}}"
+  kubectl get pods -n app-demo
+  ```
+- [ ] Port forwarding is active (for K8s services)
+  ```bash
+  ./k8s/k8s-permissions_port-forward.sh status
+  ```
+
+### Step 3: Review Documentation
+
+- [ ] Read [FAQ.md](FAQ.md) - Is your question answered?
+- [ ] Read this Troubleshooting Guide - Is your issue listed?
+- [ ] Read the specific tool guide (e.g., Jenkins.md, Harbor.md)
+- [ ] Check [TESTING-Guide.md](TESTING-Guide.md) if test-related
+
+### Step 4: Run Diagnostic Tests
+
+- [ ] Run deployment tests
+  ```bash
+  ./scripts/test-deployment.sh
+  ```
+  **Result**: ___ tests passed, ___ tests failed
+
+- [ ] Run integration tests (optional but helpful)
+  ```bash
+  ./scripts/test-integration.sh
+  ```
+  **Result**: ___ tests passed, ___ tests failed
+
+- [ ] Check specific service health
+  ```bash
+  # For Kubernetes services
+  kubectl get pods -n app-demo
+  kubectl logs <failing-pod> -n app-demo
+
+  # For Docker Compose services
+  docker logs <container-name>
+  ```
+
+### Step 5: Collect Error Information
+
+If you're still having issues, collect this information:
+
+- [ ] **Error message** (copy exact error text):
+  ```
+  [Paste error message here]
+  ```
+
+- [ ] **Service logs** (last 50 lines):
+  ```bash
+  # For Kubernetes
+  kubectl logs <pod> -n app-demo --tail=50
+
+  # For Docker
+  docker logs <container> --tail=50
+  ```
+
+- [ ] **Pod/container status**:
+  ```bash
+  kubectl get pod <pod> -n app-demo -o yaml
+  # OR
+  docker inspect <container>
+  ```
+
+- [ ] **Events** (for Kubernetes issues):
+  ```bash
+  kubectl get events -n app-demo --sort-by='.lastTimestamp' | tail -20
+  ```
+
+- [ ] **System information**:
+  ```bash
+  # OS version
+  sw_vers  # macOS
+  cat /etc/os-release  # Linux
+
+  # Docker version
+  docker --version
+
+  # Kubernetes version
+  kubectl version --short
+  ```
+
+### Step 6: Attempted Solutions
+
+- [ ] I have tried restarting the failing service:
+  ```bash
+  # Kubernetes
+  kubectl rollout restart deployment/<name> -n app-demo
+  # Docker
+  docker restart <container>
+  ```
+
+- [ ] I have tried cleaning and redeploying:
+  ```bash
+  ./scripts/cleanup-all.sh
+  ./scripts/setup-all.sh
+  ```
+
+- [ ] I have checked for port conflicts:
+  ```bash
+  lsof -i :8080  # Replace with relevant port
+  ```
+
+- [ ] I have reviewed recent changes:
+  ```bash
+  git log --oneline -10
+  git diff HEAD~1
+  ```
+
+### Step 7: Search Existing Issues
+
+- [ ] I have searched GitHub issues:
+  - https://github.com/gmedeirosnet/CI.CD/issues
+  - Search keywords: [your error message keywords]
+
+- [ ] I have checked closed issues for solutions
+
+### Step 8: Prepare Issue Report
+
+If the issue persists after completing all steps above, prepare your issue report with:
+
+**Required Information**:
+1. **Environment**:
+   - OS: [macOS/Linux/Windows]
+   - Docker version: [run `docker --version`]
+   - RAM: [8GB/16GB/etc]
+   - Disk space free: [run `df -h`]
+
+2. **Issue Description**:
+   - What were you trying to do?
+   - What did you expect to happen?
+   - What actually happened?
+
+3. **Steps to Reproduce**:
+   - List exact commands you ran
+   - Include any configuration changes
+   - Specify which script/tool failed
+
+4. **Error Messages**:
+   - Include full error message (use code blocks)
+   - Include relevant logs (last 50 lines)
+   - Include pod events (for Kubernetes)
+
+5. **What You've Tried**:
+   - List troubleshooting steps from this checklist
+   - Include results of each attempt
+
+6. **Test Results**:
+   - Output from `./scripts/test-deployment.sh`
+   - Output from `./scripts/test-integration.sh`
+
+**Issue Template**:
+
+```markdown
+## Environment
+- OS: [macOS 13.2 / Ubuntu 22.04 / Windows 11 WSL2]
+- Docker version: [24.0.7]
+- RAM: [16GB]
+- Disk free: [50GB]
+
+## Issue Description
+[What were you trying to do?]
+
+## Expected Behavior
+[What should happen?]
+
+## Actual Behavior
+[What actually happened?]
+
+## Steps to Reproduce
+1. [First step]
+2. [Second step]
+3. [Error occurs]
+
+## Error Message
+```
+[Full error message here]
+```
+
+## Logs
+```
+[Relevant logs here - last 50 lines]
+```
+
+## What I've Tried
+- [x] Restarted service
+- [x] Checked documentation
+- [ ] Other steps...
+
+## Test Results
+- Deployment tests: 20/26 passed
+- Integration tests: Skipped
+- Specific failure: [describe]
+
+## Additional Context
+[Any other relevant information]
+```
+
+---
+
+## Additional Troubleshooting Resources
+
+### Log Locations
+
+**Docker Compose Services**:
+```bash
+# Jenkins
+docker logs jenkins --tail=100 --follow
+
+# Harbor
+docker-compose -f harbor/docker-compose.yml logs --tail=100
+
+# SonarQube
+docker logs sonarqube --tail=100
+```
+
+**Kubernetes Services**:
+```bash
+# PostgreSQL
+kubectl logs -n app-demo postgres-0 --tail=100
+
+# Backend
+kubectl logs -n app-demo -l app=cicd-demo-backend --tail=100
+
+# All pods in namespace
+kubectl logs -n app-demo --all-containers=true --tail=50
+```
+
+**System Logs**:
+```bash
+# Docker daemon logs (Linux)
+sudo journalctl -u docker --since "1 hour ago"
+
+# macOS Console.app
+# Open Console.app and filter for "Docker"
+
+# Kind cluster logs
+kind export logs ./kind-logs
+```
+
+### Common Error Patterns
+
+#### "Connection Refused" Errors
+
+**Pattern**: `connect: connection refused` or `dial tcp: connect: connection refused`
+
+**Likely Causes**:
+1. Service not running
+2. Wrong hostname (use container name, not localhost)
+3. Port forwarding not active
+4. Firewall blocking connection
+
+**Fix Strategy**:
+1. Verify service is running: `docker ps` or `kubectl get pods`
+2. Check hostname in configuration (container-to-container use container names)
+3. Restart port forwarding: `./k8s/k8s-permissions_port-forward.sh restart`
+
+#### "Permission Denied" Errors
+
+**Pattern**: `permission denied` or `dial unix /var/run/docker.sock: connect: permission denied`
+
+**Likely Causes**:
+1. Docker socket permissions (Jenkins)
+2. File ownership in volumes
+3. Security context restrictions
+
+**Fix Strategy**:
+1. For Docker socket: `docker exec -u root jenkins chmod 666 /var/run/docker.sock`
+2. For file permissions: Check pod init containers, fsGroup settings
+3. For security context: Review pod security context and Kyverno policies
+
+#### "Out of Memory" Errors
+
+**Pattern**: `OOMKilled`, `OutOfMemory`, or `exit code 137`
+
+**Likely Causes**:
+1. Memory limits too low
+2. Memory leak in application
+3. Insufficient cluster resources
+
+**Fix Strategy**:
+1. Increase memory limits: `kubectl edit deployment <name> -n app-demo`
+2. Check memory usage: `kubectl top pods -n app-demo`
+3. Review application logs for memory leaks
+4. Scale down other services if needed
+
+#### "Image Pull" Errors
+
+**Pattern**: `ImagePullBackOff`, `ErrImagePull`, `Failed to pull image`
+
+**Likely Causes**:
+1. Image doesn't exist
+2. Registry not accessible
+3. Authentication failed
+4. Image name typo
+
+**Fix Strategy**:
+1. Verify image exists: `docker images` or check Harbor UI
+2. Check registry accessible: `curl http://localhost:8082`
+3. Verify credentials: `docker login localhost:8082`
+4. Check image name in deployment YAML
+
+---
+
+## Preventive Maintenance
+
+### Daily Checks
+
+```bash
+# Check all services health
+./scripts/test-deployment.sh
+
+# Check disk space
+docker system df
+df -h
+
+# Check pod status
+kubectl get pods -n app-demo
+```
+
+### Weekly Maintenance
+
+```bash
+# Clean unused Docker resources
+docker system prune
+
+# Check for updates
+git pull
+
+# Review logs for errors
+docker logs jenkins | grep ERROR
+kubectl logs -n app-demo -l app=cicd-demo-backend | grep ERROR
+```
+
+### Monthly Maintenance
+
+```bash
+# Update tool versions (review release notes first)
+# Update docker-compose.yml image tags
+# Update Helm chart versions
+
+# Rotate credentials
+# Follow: docs/SECURITY-Credential-Rotation.md
+
+# Review and update policies
+# Check: k8s/kyverno/policies/
+```
+
+---
+
+## Getting Help
+
+### Documentation Resources
+
+1. **This Repository**:
+   - [FAQ.md](FAQ.md) - Frequently Asked Questions
+   - [QUICK-START.md](QUICK-START.md) - Quick start guide
+   - [INDEX.md](INDEX.md) - Complete documentation index
+   - Tool-specific guides in `docs/`
+
+2. **Official Documentation**:
+   - [Kubernetes docs](https://kubernetes.io/docs/)
+   - [Docker docs](https://docs.docker.com/)
+   - [Jenkins docs](https://www.jenkins.io/doc/)
+   - [ArgoCD docs](https://argo-cd.readthedocs.io/)
+   - [Harbor docs](https://goharbor.io/docs/)
+
+3. **Community**:
+   - GitHub Issues: https://github.com/gmedeirosnet/CI.CD/issues
+   - GitHub Discussions: https://github.com/gmedeirosnet/CI.CD/discussions
+
+### Reporting Bugs
+
+When reporting bugs, use the checklist above and provide:
+- Environment details
+- Exact steps to reproduce
+- Expected vs actual behavior
+- Full error messages and logs
+- What you've already tried
+
+### Requesting Features
+
+When requesting features:
+- Explain the use case
+- Describe expected behavior
+- Suggest implementation approach (optional)
+- Link to relevant documentation or examples
+
+---
+
+**Last Updated**: 2026-03-10
+**Version**: 2.0.0 (Enhanced with decision trees and pre-issue checklist)
+**Maintained By**: DevOps Lab Team

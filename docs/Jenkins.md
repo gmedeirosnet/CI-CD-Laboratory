@@ -594,6 +594,14 @@ tail -f /var/log/jenkins/jenkins.log
 docker logs -f jenkins
 ```
 
+## Related Documents
+- [Port Reference](Port-Reference.md) - Service ports and access URLs
+- [Troubleshooting Guide](Troubleshooting.md) - Common issues and solutions
+- [GitHub-Jenkins Credential Setup](GitHub-Jenkins-Credential-Setup.md) - GitHub integration
+- [Harbor-Jenkins Credential Setup](Harbor-Jenkins-Credential-Setup.md) - Harbor integration
+- [Scripts Documentation](Scripts.md) - Automation scripts reference
+- [Lab Setup Guide](Lab-Setup-Guide.md) - Complete laboratory setup
+
 ## References
 - Official Documentation: https://www.jenkins.io/doc/
 - Plugin Index: https://plugins.jenkins.io/

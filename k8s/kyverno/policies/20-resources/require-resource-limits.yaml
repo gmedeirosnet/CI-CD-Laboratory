@@ -1,3 +1,81 @@
+# Policy: Require Resource Limits
+#
+# Purpose:
+#   Ensures all containers have CPU and memory resource limits defined.
+#   Prevents resource exhaustion and enables fair resource allocation.
+#
+# Validation Mode: Audit (logs violations, allows deployment)
+#
+# Security Impact: MEDIUM
+#   - Prevents resource-based denial of service attacks
+#   - Protects against noisy neighbor problems
+#   - Enables predictable performance
+#   - Supports capacity planning
+#
+# Why Resource Limits Matter:
+#   - Prevents single pod from consuming all cluster resources
+#   - Enables Kubernetes scheduler to make informed decisions
+#   - Protects cluster stability
+#   - Required for horizontal pod autoscaling
+#
+# Recommended Limits by Application Type:
+#   Frontend:
+#     requests: cpu=100m, memory=128Mi
+#     limits:   cpu=500m, memory=512Mi
+#
+#   Backend API:
+#     requests: cpu=250m, memory=256Mi
+#     limits:   cpu=1000m, memory=1Gi
+#
+#   Database:
+#     requests: cpu=500m, memory=512Mi
+#     limits:   cpu=2000m, memory=2Gi
+#
+#   Worker/Job:
+#     requests: cpu=200m, memory=256Mi
+#     limits:   cpu=800m, memory=1Gi
+#
+# Exempted Namespaces:
+#   - kube-system, kube-public, kube-node-lease, kyverno
+#
+# Example Violation:
+#   spec:
+#     containers:
+#     - name: app
+#       image: nginx
+#       # No resources defined
+#
+# Example Compliant:
+#   spec:
+#     containers:
+#     - name: app
+#       image: nginx
+#       resources:
+#         requests:
+#           cpu: 100m
+#           memory: 128Mi
+#         limits:
+#           cpu: 500m
+#           memory: 512Mi
+#
+# Best Practices:
+#   - Set requests based on average usage
+#   - Set limits based on peak usage + buffer
+#   - Monitor actual usage with Prometheus
+#   - Adjust limits based on metrics
+#   - Use LimitRanges for namespace-level defaults
+#
+# CPU Units:
+#   - 1000m = 1 CPU core
+#   - 100m = 0.1 CPU core (10% of one core)
+#
+# Memory Units:
+#   - Mi = Mebibytes (1024^2 bytes)
+#   - Gi = Gibibytes (1024^3 bytes)
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md (Resource Policies section)
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:

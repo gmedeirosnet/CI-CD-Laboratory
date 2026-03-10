@@ -173,7 +173,7 @@ kubectl describe application APP_NAME -n argocd
 
 ## Resources
 
-- Full Guide: `argocd-setup.md`
+- Full Guide: `ArgoCD-QuickStart.md`
 - Sample Apps: `k8s/sample-app/`
 - App Definitions: `argocd-apps/`
 - ArgoCD Docs: https://argo-cd.readthedocs.io/

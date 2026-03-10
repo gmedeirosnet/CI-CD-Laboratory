@@ -1,9 +1,90 @@
 #!/usr/bin/env zsh
 
-# Kubernetes Service Port Forwarding & Permissions Script
-# Sets up port forwarding for monitoring and logging services
-# Fixes Docker socket permissions for Jenkins
-# Usage: ./k8s-permissions_port-forward.sh [start|stop|status|restart|fix-docker]
+# ==============================================================================
+# Kubernetes Service Port Forwarding & Docker Permissions Management Script
+# ==============================================================================
+#
+# PURPOSE:
+#   Automated management of kubectl port forwards for monitoring and logging
+#   services, plus Docker socket permission fixes for Jenkins CI/CD pipeline.
+#
+# MANAGED SERVICES:
+#   - Loki:       localhost:31000 → logging/loki:3100        (Log aggregation)
+#   - Prometheus: localhost:30090 → monitoring/prometheus:9090 (Metrics)
+#   - ArgoCD:     localhost:8090  → argocd/argocd-server:443  (GitOps UI)
+#
+# PORT MAPPING STRATEGY:
+#   - ArgoCD:     8090 (avoids conflict with Jenkins on 8080)
+#   - Loki:       31000 (matches NodePort for consistency)
+#   - Prometheus: 30090 (matches NodePort for consistency)
+#
+# FEATURES:
+#   ✓ Automatic port conflict detection using lsof
+#   ✓ PID-based tracking for reliable start/stop
+#   ✓ Orphaned process cleanup
+#   ✓ Docker socket permission fixing for Jenkins
+#   ✓ Service existence validation before forwarding
+#   ✓ Graceful shutdown with force-kill fallback
+#
+# USAGE:
+#   ./k8s-permissions_port-forward.sh [start|stop|status|restart|cleanup|fix-docker]
+#
+# COMMANDS:
+#   start       - Start all port forwards and fix Docker permissions (default)
+#   stop        - Stop all port forwards gracefully
+#   restart     - Stop then start all port forwards
+#   status      - Show current status of all managed port forwards
+#   cleanup     - Kill orphaned kubectl port-forward processes
+#   fix-docker  - Fix Docker socket permissions for Jenkins (chmod 666)
+#
+# EXAMPLES:
+#   # Start all services
+#   ./k8s-permissions_port-forward.sh start
+#
+#   # Check what's running
+#   ./k8s-permissions_port-forward.sh status
+#
+#   # Stop everything
+#   ./k8s-permissions_port-forward.sh stop
+#
+#   # Clean up stuck processes
+#   ./k8s-permissions_port-forward.sh cleanup
+#
+# PID FILES:
+#   Location: /tmp/k8s-port-forward/
+#   Format:   <service-name>.pid
+#   Example:  /tmp/k8s-port-forward/loki.pid
+#
+# PREREQUISITES:
+#   - kubectl installed and configured
+#   - Kind cluster running (kind-app-demo)
+#   - Services deployed in respective namespaces
+#   - lsof available for port conflict detection
+#
+# TROUBLESHOOTING:
+#   Port already in use:
+#     lsof -i :8090
+#     kill -9 <PID>
+#
+#   Service not found:
+#     kubectl get svc -n <namespace>
+#
+#   Port forward dies immediately:
+#     kubectl describe svc <service-name> -n <namespace>
+#     kubectl get endpoints <service-name> -n <namespace>
+#
+#   Jenkins can't access Docker:
+#     ./k8s-permissions_port-forward.sh fix-docker
+#     docker restart jenkins
+#
+# EXIT CODES:
+#   0 - Success
+#   1 - Failure (kubectl not found, service not found, etc.)
+#
+# AUTHOR: DevOps Lab Team
+# VERSION: 2.0
+# LAST UPDATED: 2026-03-09
+# ==============================================================================
 
 set -e
 

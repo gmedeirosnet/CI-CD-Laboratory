@@ -32,7 +32,7 @@ docker run -d --name sonarqube \
   -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
   sonarqube:lts-community
 
-# Access SonarQube at: http://localhost:8090
+# Access SonarQube at: http://localhost:9000
 # Default credentials: admin / admin
 ```
 
@@ -179,7 +179,7 @@ export PATH=$PATH:/opt/sonar-scanner/bin
 # Configure
 vi /opt/sonar-scanner/conf/sonar-scanner.properties
 # Add:
-# sonar.host.url=http://localhost:8090
+# sonar.host.url=http://localhost:9000
 # sonar.login=<your-token>
 ```
 
@@ -206,7 +206,7 @@ EOF
 
 # Run analysis
 sonar-scanner \
-  -Dsonar.host.url=http://localhost:8090 \
+  -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=<your-token>
 ```
 
@@ -214,7 +214,7 @@ sonar-scanner \
 ```xml
 <!-- Add to pom.xml -->
 <properties>
-    <sonar.host.url>http://localhost:8090</sonar.host.url>
+    <sonar.host.url>http://localhost:9000</sonar.host.url>
 </properties>
 ```
 
@@ -226,7 +226,7 @@ mvn clean verify sonar:sonar \
 # With specific profile
 mvn clean verify sonar:sonar \
   -Dsonar.projectKey=my-project \
-  -Dsonar.host.url=http://localhost:8090 \
+  -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=<your-token>
 ```
 
@@ -242,7 +242,7 @@ sonarqube {
         sonarqube {
         properties {
         property "sonar.projectKey", "my-project"
-        property "sonar.host.url", "http://localhost:8090"
+        property "sonar.host.url", "http://localhost:9000"
         property "sonar.login", "your-token-here"
     }
 }

@@ -1,3 +1,49 @@
+# Policy: Disallow Privileged Containers
+#
+# Purpose:
+#   Blocks containers from running in privileged mode, which grants access
+#   to all Linux kernel capabilities and device access.
+#
+# Validation Mode: Audit (logs violations, allows deployment)
+#
+# Security Impact: HIGH
+#   - Prevents container escape attacks
+#   - Blocks access to host kernel features
+#   - Mitigates privilege escalation risks
+#   - Critical for multi-tenant security
+#
+# Why Privileged Mode is Dangerous:
+#   - Full access to host devices (/dev/*)
+#   - Can load kernel modules
+#   - Can manipulate host network stack
+#   - Bypasses most container isolation
+#
+# Exempted Namespaces:
+#   - kube-system, kube-public, kube-node-lease (system components)
+#
+# Example Violation:
+#   spec:
+#     containers:
+#     - name: app
+#       securityContext:
+#         privileged: true  # ❌ VIOLATION
+#
+# Example Compliant:
+#   spec:
+#     containers:
+#     - name: app
+#       securityContext:
+#         privileged: false  # ✅ COMPLIANT
+#         allowPrivilegeEscalation: false
+#
+# Migration to Enforce Mode:
+#   1. Review all policy violations in Policy Reporter
+#   2. Fix non-compliant deployments
+#   3. Change validationFailureAction to "Enforce"
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md (Container Security section)
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
