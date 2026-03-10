@@ -1,3 +1,43 @@
+# Policy: Namespace Label Requirements
+#
+# Purpose:
+#   Enforces consistent labeling on all namespaces for governance and tracking.
+#   Required labels enable cost allocation, access control, and resource management.
+#
+# Required Labels:
+#   - team: Team or organization owning the namespace (e.g., "devops", "platform")
+#   - purpose: Namespace purpose (e.g., "application", "database", "monitoring")
+#
+# Optional Labels:
+#   - environment: Environment type (e.g., "dev", "staging", "prod")
+#
+# Validation Mode: Audit (logs violations, allows creation)
+#
+# Security Impact: MEDIUM
+#   - Improves audit trail and compliance
+#   - Enables RBAC policies based on labels
+#   - Supports cost allocation and chargeback
+#
+# Exempted Namespaces:
+#   - kube-* (system namespaces)
+#   - default, kyverno, argocd, monitoring, logging
+#
+# Example Compliant Namespace:
+#   apiVersion: v1
+#   kind: Namespace
+#   metadata:
+#     name: my-app
+#     labels:
+#       team: "platform"
+#       purpose: "application"
+#       environment: "dev"
+#
+# Example Violation:
+#   Namespace without 'team' or 'purpose' labels will be logged in policy reports
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:

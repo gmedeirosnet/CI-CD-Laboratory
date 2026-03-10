@@ -1,3 +1,87 @@
+# Policy: Add Default Labels
+#
+# Purpose:
+#   Automatically adds standard labels to all workload resources.
+#   Improves observability, monitoring, and resource management.
+#
+# Mutation Mode: Always active (adds labels automatically)
+#
+# Labels Added:
+#   - managed-by: kyverno (Identifies Kyverno-managed resources)
+#   - environment: cicd-lab (Environment identifier)
+#   - cluster: kind-cicd-demo (Cluster identifier)
+#
+# Security Impact: LOW
+#   - Improves audit trail and compliance
+#   - Enables label-based RBAC policies
+#   - Supports monitoring and alerting
+#   - Facilitates resource queries
+#
+# Why Standard Labels Matter:
+#   - Consistent labeling across all resources
+#   - Easier to query and filter with kubectl
+#   - Supports Prometheus monitoring selectors
+#   - Enables cost allocation and chargeback
+#   - Required for some policy exemptions
+#
+# Affected Resources:
+#   - Deployment
+#   - StatefulSet
+#   - DaemonSet
+#
+# Exempted Namespaces:
+#   - kube-system, kube-public, kube-node-lease, kyverno
+#
+# Example Mutation:
+#   Before:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     metadata:
+#       name: my-app
+#
+#   After (Kyverno adds labels):
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     metadata:
+#       name: my-app
+#       labels:
+#         managed-by: kyverno
+#         environment: cicd-lab
+#         cluster: kind-cicd-demo
+#     spec:
+#       template:
+#         metadata:
+#           labels:
+#             managed-by: kyverno
+#             environment: cicd-lab
+#             cluster: kind-cicd-demo
+#
+# Querying Resources:
+#   # Find all Kyverno-managed resources
+#   kubectl get all -l managed-by=kyverno
+#
+#   # Find lab resources
+#   kubectl get all -l environment=cicd-lab
+#
+#   # Find cluster-specific resources
+#   kubectl get all -l cluster=kind-cicd-demo
+#
+# Best Practices:
+#   - Use labels for monitoring selectors
+#   - Include environment labels in all deployments
+#   - Add custom labels as needed (app, version, component)
+#   - Follow Kubernetes recommended labels:
+#     * app.kubernetes.io/name
+#     * app.kubernetes.io/instance
+#     * app.kubernetes.io/version
+#     * app.kubernetes.io/component
+#     * app.kubernetes.io/part-of
+#     * app.kubernetes.io/managed-by
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md (Label Policies section)
+#   - https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:

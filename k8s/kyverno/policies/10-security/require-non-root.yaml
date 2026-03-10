@@ -1,3 +1,54 @@
+# Policy: Require Non-Root User
+#
+# Purpose:
+#   Enforces that containers run as non-root users (UID != 0).
+#   Reduces attack surface and limits damage from container compromise.
+#
+# Validation Mode: Audit (logs violations, allows deployment)
+#
+# Security Impact: HIGH
+#   - Limits privilege escalation opportunities
+#   - Reduces impact of container escape attacks
+#   - Prevents root-level file system modifications
+#   - Defense-in-depth security layer
+#
+# Why Running as Root is Risky:
+#   - Root inside container = root on host (if container escapes)
+#   - Can modify sensitive files if volumes mounted
+#   - Can install malware with persistence
+#   - Violates principle of least privilege
+#
+# Exempted Namespaces:
+#   - kube-system, kube-public, kube-node-lease, kyverno
+#
+# Example Violation:
+#   spec:
+#     containers:
+#     - name: app
+#       image: nginx
+#       # No securityContext = runs as root
+#
+# Example Compliant:
+#   spec:
+#     securityContext:
+#       runAsNonRoot: true
+#       runAsUser: 1000
+#       fsGroup: 1000
+#     containers:
+#     - name: app
+#       securityContext:
+#         runAsUser: 1000
+#         allowPrivilegeEscalation: false
+#
+# Best Practices:
+#   - Use UID 1000+ for application users
+#   - Set fsGroup for volume permissions
+#   - Build images with non-root USER directive
+#   - Test application functionality as non-root
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md (Container Security section)
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:

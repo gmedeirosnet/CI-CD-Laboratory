@@ -1,3 +1,31 @@
+# Policy: Prevent Namespace Deletion
+#
+# Purpose:
+#   Protects critical namespaces from accidental or intentional deletion.
+#   This prevents service disruption and data loss in production environments.
+#
+# Protected Namespaces:
+#   - argocd: GitOps deployment controller
+#   - logging: Loki log aggregation system
+#   - monitoring: Prometheus and Grafana stack
+#
+# Validation Mode: Enforce (blocks deletion attempts)
+#
+# Security Impact: CRITICAL
+#   - Prevents accidental deletion of production infrastructure
+#   - Protects observability stack from disruption
+#   - Maintains audit trail and compliance requirements
+#
+# Example Violation:
+#   kubectl delete namespace argocd
+#   Error: Deletion of namespace is not allowed
+#
+# Override Procedure:
+#   Contact cluster administrator for namespace deletion approval
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/SECURITY-BestPractices.md
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy

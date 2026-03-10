@@ -1,3 +1,74 @@
+# Policy: Enforce Harbor Registry
+#
+# Purpose:
+#   Ensures all container images come from the trusted Harbor registry.
+#   Prevents deployment of unscanned or malicious images from public registries.
+#
+# Allowed Image Registries:
+#   - host.docker.internal:8082/cicd-demo/* (Harbor registry)
+#   - postgres:* (Exempt for PostgreSQL official images)
+#
+# Validation Mode: Audit (logs violations, allows deployment)
+#
+# Security Impact: HIGH
+#   - Prevents supply chain attacks
+#   - Ensures all images are vulnerability scanned
+#   - Enforces image approval workflow
+#   - Blocks untrusted image sources
+#
+# Why Harbor-Only Matters:
+#   - Harbor scans images for CVEs
+#   - Provides audit trail of deployed images
+#   - Supports image signing and verification
+#   - Enables policy-based access control
+#   - Caches images for availability
+#
+# Exempted Namespaces:
+#   - kube-system, kube-public, kube-node-lease
+#   - kyverno, argocd, monitoring, logging
+#
+# Exempted Pods (by label):
+#   - app: postgres (PostgreSQL uses official image)
+#
+# Example Violation:
+#   spec:
+#     containers:
+#     - name: app
+#       image: nginx:latest  # ❌ VIOLATION - not from Harbor
+#
+# Example Compliant:
+#   spec:
+#     containers:
+#     - name: app
+#       image: host.docker.internal:8082/cicd-demo/app:latest
+#
+# Migration Workflow:
+#   1. Pull image from public registry
+#      docker pull nginx:latest
+#
+#   2. Tag for Harbor
+#      docker tag nginx:latest localhost:8082/cicd-demo/nginx:latest
+#
+#   3. Push to Harbor
+#      docker push localhost:8082/cicd-demo/nginx:latest
+#
+#   4. Update Kubernetes manifest
+#      image: host.docker.internal:8082/cicd-demo/nginx:latest
+#
+#   5. Verify Harbor vulnerability scan
+#      Open Harbor UI > Projects > cicd-demo > Repositories
+#
+# CI/CD Integration:
+#   Jenkins pipeline automatically:
+#   - Builds application image
+#   - Pushes to Harbor registry
+#   - Triggers vulnerability scan
+#   - Blocks deployment if critical CVEs found
+#
+# Related Documentation:
+#   - docs/KYVERNO-Policy-CheatSheet.md
+#   - docs/Harbor.md (Harbor setup and usage)
+#   - docs/SECURITY-BestPractices.md (Registry Policies section)
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
