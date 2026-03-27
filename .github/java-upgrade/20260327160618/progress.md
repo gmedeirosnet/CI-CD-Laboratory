@@ -59,3 +59,7 @@
 ---
 
 ## Notes
+
+- Lombok upgrade from 1.18.36 to 1.18.44 was required — Java 25 annotation processing support was added in Lombok 1.18.40.
+- annotationProcessorPaths configuration added to maven-compiler-plugin to ensure explicit Lombok annotation processing with Java 25.
+- Test failures (0/4) are pre-existing infrastructure issues (PostgreSQL not running), identical to baseline. Not caused by Java upgrade.
