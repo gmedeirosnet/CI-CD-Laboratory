@@ -1,0 +1,1093 @@
+2026-03-27T16:06:18.099Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:06:18.099Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "event": "precheckCompleted",
+  "phase": "precheck",
+  "status": "succeeded"
+}}).
+2026-03-27T16:06:18.099Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:06:18.100Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'precheckCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:06:18.100Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:06:23.360Z [INFO] ---------------------prepare appmod-list-jdks----------------------
+2026-03-27T16:06:23.361Z [INFO] [Tool.prepareInvocation]({name: appmod-list-jdks, input: {
+  "sessionId": "20260327160618",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}}).
+2026-03-27T16:06:23.361Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:06:23.361Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "List jdks"
+}}).
+2026-03-27T16:06:23.361Z [INFO] ----------------------prepared appmod-list-jdks----------------------
+2026-03-27T16:06:23.380Z [INFO] ----------------------invoke appmod-list-jdks----------------------
+2026-03-27T16:06:23.380Z [INFO] [Tool.invoke]({name: appmod-list-jdks, input: {
+  "sessionId": "20260327160618",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}}).
+2026-03-27T16:06:23.380Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:06:23.393Z [INFO] [Tool.invoke]({result: {
+  "message": "We found following jdks in your system:\n\n1. Java 21.0.10\n   📁 Path: /opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home/bin\n   🏷️ Source: PATH,JAVA_HOME\n\n2. Java 25.0.2\n   📁 Path: /opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin\n   🏷️ Source: others\n\nTotal: 2 JDK installation(s) found"
+}}).
+2026-03-27T16:06:23.393Z [INFO] ----------------------invoked appmod-list-jdks----------------------
+2026-03-27T16:06:33.482Z [INFO] ---------------------prepare appmod-list-mavens----------------------
+2026-03-27T16:06:33.483Z [INFO] [Tool.prepareInvocation]({name: appmod-list-mavens, input: {
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618"
+}}).
+2026-03-27T16:06:33.483Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:06:33.483Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "List mavens"
+}}).
+2026-03-27T16:06:33.483Z [INFO] ----------------------prepared appmod-list-mavens----------------------
+2026-03-27T16:06:33.492Z [INFO] ----------------------invoke appmod-list-mavens----------------------
+2026-03-27T16:06:33.493Z [INFO] [Tool.invoke]({name: appmod-list-mavens, input: {
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618"
+}}).
+2026-03-27T16:06:33.493Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:06:33.494Z [INFO] [Tool.invoke]({result: {
+  "message": "We found following maven installations in your system:\n\n1. 📁 Path: /opt/homebrew/Cellar/maven/3.9.14/bin\n   🏷️ Source: Homebrew,PATH\n\nTotal: 1 Maven installation(s) found"
+}}).
+2026-03-27T16:06:33.494Z [INFO] ----------------------invoked appmod-list-mavens----------------------
+2026-03-27T16:07:10.339Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:07:10.340Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "planInitialized",
+  "phase": "plan",
+  "sessionId": "20260327160618",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "status": "succeeded"
+}}).
+2026-03-27T16:07:10.340Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:07:10.340Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:07:10.340Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:07:10.357Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:07:10.357Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "planInitialized",
+  "phase": "plan",
+  "sessionId": "20260327160618",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "status": "succeeded"
+}}).
+2026-03-27T16:07:10.357Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:07:10.358Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'planInitialized' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:07:10.358Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:09:07.123Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:09:07.124Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "environmentAnalyzed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:07.124Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:09:07.124Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:09:07.124Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:09:07.141Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:09:07.142Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "environmentAnalyzed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:07.142Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:09:07.142Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'environmentAnalyzed' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:09:07.142Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:09:10.086Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:09:10.086Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "dependenciesAnalyzed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:10.087Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:09:10.087Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:09:10.087Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:09:10.101Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:09:10.101Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "dependenciesAnalyzed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:10.101Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:09:10.101Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'dependenciesAnalyzed' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:09:10.101Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:09:13.419Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:09:13.419Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "upgradePathDesigned",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:13.419Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:09:13.420Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:09:13.420Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:09:13.434Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:09:13.434Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "upgradePathDesigned",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:13.434Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:09:13.434Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'upgradePathDesigned' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:09:13.434Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:09:16.486Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:09:16.486Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "planReviewed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:16.487Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:09:16.487Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:09:16.487Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:09:16.501Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:09:16.501Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "planReviewed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:09:16.501Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:09:16.501Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'planReviewed' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:09:16.501Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:09:23.062Z [INFO] ---------------------prepare appmod-confirm-upgrade-plan----------------------
+2026-03-27T16:09:23.062Z [INFO] [Tool.prepareInvocation]({name: appmod-confirm-upgrade-plan, input: {
+  "sessionId": "20260327160618"
+}}).
+2026-03-27T16:09:23.062Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:09:23.062Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Review [upgrade plan](/Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618/plan.md)",
+  "confirmationMessages": {
+    "title": "Plan generated",
+    "message": "Please review the generated plan and make any necessary adjustments before proceeding. You can modify the generated [`plan.md`](/Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618/plan.md) directly."
+  }
+}}).
+2026-03-27T16:09:23.062Z [INFO] ----------------------prepared appmod-confirm-upgrade-plan----------------------
+2026-03-27T16:11:21.131Z [INFO] ----------------------invoke appmod-confirm-upgrade-plan----------------------
+2026-03-27T16:11:21.132Z [INFO] [Tool.invoke]({name: appmod-confirm-upgrade-plan, input: {
+  "sessionId": "20260327160618"
+}}).
+2026-03-27T16:11:21.132Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:11:21.132Z [INFO] Upgrade plan confirmed successfully.
+2026-03-27T16:11:21.133Z [INFO] [Tool.invoke]({result: {
+  "message": "Generated plan is reviewed and confirmed by the user! the upgrade process will start now and be tracked in markdown file: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618/progress.md."
+}}).
+2026-03-27T16:11:21.133Z [INFO] ----------------------invoked appmod-confirm-upgrade-plan----------------------
+2026-03-27T16:11:24.673Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:11:24.674Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "planConfirmed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:11:24.674Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:11:24.674Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:11:24.674Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:11:24.689Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:11:24.690Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "planConfirmed",
+  "phase": "plan",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:11:24.690Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:11:24.690Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'planConfirmed' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:11:24.690Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:12:13.200Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:12:13.201Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "planExecutionStarted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:12:13.201Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:12:13.202Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:12:13.202Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:12:13.216Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:12:13.217Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "planExecutionStarted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:12:13.217Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:12:13.232Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'planExecutionStarted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:12:13.232Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:12:50.962Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:12:50.963Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "environmentSetup",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded",
+  "details": {
+    "jdkPath": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home",
+    "buildToolPath": "/opt/homebrew/Cellar/maven/3.9.14/bin/mvn"
+  }
+}}).
+2026-03-27T16:12:50.963Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:12:50.963Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:12:50.963Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:12:50.978Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:12:50.979Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "environmentSetup",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded",
+  "details": {
+    "jdkPath": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home",
+    "buildToolPath": "/opt/homebrew/Cellar/maven/3.9.14/bin/mvn"
+  }
+}}).
+2026-03-27T16:12:50.979Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:12:50.979Z [INFO] Project /Users/gutembergmedeiros/Labs/CI-CD-Laboratory is a maven project, try to get java version from pom.xml
+2026-03-27T16:12:50.980Z [INFO] Project java version: 21
+2026-03-27T16:12:50.980Z [INFO] Maven project detected.
+2026-03-27T16:12:50.980Z [INFO] Build tool type: mvn
+2026-03-27T16:12:50.980Z [INFO] JDK: {
+  "name": "java",
+  "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+  "version": "21"
+}
+2026-03-27T16:12:50.980Z [INFO] Build tool: {
+  "name": "mvn",
+  "path": "/opt/homebrew/Cellar/maven/3.9.14/bin/mvn/bin",
+  "version": ""
+}
+2026-03-27T16:12:50.980Z [INFO] Project config: {
+  "buildTool": {
+    "path": "/opt/homebrew/Cellar/maven/3.9.14/bin/mvn/bin",
+    "name": "mvn",
+    "version": ""
+  },
+  "jdk": {
+    "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+    "name": "java",
+    "version": "21"
+  },
+  "name": "CI-CD-Laboratory",
+  "dir": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}
+2026-03-27T16:12:55.494Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'environmentSetup' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:12:55.494Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:13:32.548Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:13:32.549Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "buildCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:13:32.549Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:13:32.549Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:13:32.549Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:13:32.565Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:13:32.565Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "buildCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:13:32.565Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:13:32.565Z [INFO] Project /Users/gutembergmedeiros/Labs/CI-CD-Laboratory is a maven project, try to get java version from pom.xml
+2026-03-27T16:13:32.566Z [INFO] Project java version: 21
+2026-03-27T16:13:32.566Z [INFO] Maven project detected.
+2026-03-27T16:13:32.566Z [INFO] Build tool type: mvn
+2026-03-27T16:13:32.578Z [INFO] JDK: {
+  "name": "java",
+  "path": "/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home/bin",
+  "version": "21"
+}
+2026-03-27T16:13:32.579Z [INFO] Build tool: {
+  "name": "mvn",
+  "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+  "version": "",
+  "source": "Homebrew,PATH"
+}
+2026-03-27T16:13:32.579Z [INFO] Project config: {
+  "buildTool": {
+    "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+    "name": "mvn",
+    "version": "",
+    "source": "Homebrew,PATH"
+  },
+  "jdk": {
+    "path": "/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home/bin",
+    "name": "java",
+    "version": "21"
+  },
+  "name": "CI-CD-Laboratory",
+  "dir": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}
+2026-03-27T16:13:32.579Z [INFO] [MavenBuildTool] Getting all module coordinates of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:13:32.579Z [INFO] [MavenBuildTool] Getting effective POMs of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:13:32.579Z [INFO] [Environment] Running command (Java undefined): mvn help:effective-pom -Doutput=effective-pom-edc62d91-c4e6-4ece-9d14-75ce20e504c2.log
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:cicd-demo >------------------------
+[INFO] Building cicd-demo 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- help:3.5.1:effective-pom (default-cli) @ cicd-demo ---
+[INFO] Effective-POM written to: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/effective-pom-edc62d91-c4e6-4ece-9d14-75ce20e504c2.log
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.188 s
+[INFO] Finished at: 2026-03-27T16:13:33Z
+[INFO] ------------------------------------------------------------------------
+2026-03-27T16:13:33.350Z [INFO] [BaseBuildTool] Found 1 modules: .
+2026-03-27T16:13:33.354Z [INFO] [BaseBuildTool] Finish counting Java and class files
+2026-03-27T16:13:33.354Z [INFO] [MavenBuildTool] Cleaning /Users/gutembergmedeiros/Labs/CI-CD-Laboratory using Maven
+2026-03-27T16:13:33.354Z [INFO] [Environment] Running command (Java undefined): mvn clean -q -B -fn
+2026-03-27T16:13:34.049Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'buildCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:13:34.049Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:13:34.055Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:13:34.055Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "testCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "failed",
+  "message": "Baseline: 0/4 tests pass - all failures due to PostgreSQL not available (pre-existing infrastructure issue)"
+}}).
+2026-03-27T16:13:34.055Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:13:34.055Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:13:34.055Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:13:34.064Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:13:34.064Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "testCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "failed",
+  "message": "Baseline: 0/4 tests pass - all failures due to PostgreSQL not available (pre-existing infrastructure issue)"
+}}).
+2026-03-27T16:13:34.064Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:13:34.064Z [INFO] Project /Users/gutembergmedeiros/Labs/CI-CD-Laboratory is a maven project, try to get java version from pom.xml
+2026-03-27T16:13:34.065Z [INFO] Project java version: 21
+2026-03-27T16:13:34.065Z [INFO] Maven project detected.
+2026-03-27T16:13:34.065Z [INFO] Build tool type: mvn
+2026-03-27T16:13:34.074Z [INFO] JDK: {
+  "name": "java",
+  "path": "/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home/bin",
+  "version": "21"
+}
+2026-03-27T16:13:34.074Z [INFO] Build tool: {
+  "name": "mvn",
+  "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+  "version": "",
+  "source": "Homebrew,PATH"
+}
+2026-03-27T16:13:34.074Z [INFO] Project config: {
+  "buildTool": {
+    "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+    "name": "mvn",
+    "version": "",
+    "source": "Homebrew,PATH"
+  },
+  "jdk": {
+    "path": "/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home/bin",
+    "name": "java",
+    "version": "21"
+  },
+  "name": "CI-CD-Laboratory",
+  "dir": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}
+2026-03-27T16:13:34.075Z [INFO] [BaseBuildTool] Gathering test results...
+2026-03-27T16:13:34.082Z [INFO] [BaseBuildTool] Summarizing surefire reports.
+2026-03-27T16:13:34.083Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'testCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:13:34.083Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:13:57.308Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:13:57.308Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "details": {
+    "stepNumber": 3,
+    "stepTitle": "Upgrade Java source/target to 25"
+  },
+  "event": "upgradeStepStarted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:13:57.308Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:13:57.308Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:13:57.308Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:13:57.324Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:13:57.324Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "details": {
+    "stepNumber": 3,
+    "stepTitle": "Upgrade Java source/target to 25"
+  },
+  "event": "upgradeStepStarted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:13:57.324Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:13:57.324Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'upgradeStepStarted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:13:57.324Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:16:36.550Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:16:36.551Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "buildCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:16:36.551Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:16:36.551Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:16:36.551Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:16:36.570Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:16:36.570Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "buildCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:16:36.570Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:16:36.570Z [INFO] Project /Users/gutembergmedeiros/Labs/CI-CD-Laboratory is a maven project, try to get java version from pom.xml
+2026-03-27T16:16:36.570Z [INFO] Project java version: 25
+2026-03-27T16:16:36.570Z [INFO] Maven project detected.
+2026-03-27T16:16:36.570Z [INFO] Build tool type: mvn
+2026-03-27T16:16:36.583Z [INFO] JDK: {
+  "name": "java",
+  "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+  "version": "25"
+}
+2026-03-27T16:16:36.584Z [INFO] Build tool: {
+  "name": "mvn",
+  "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+  "version": "",
+  "source": "Homebrew,PATH"
+}
+2026-03-27T16:16:36.584Z [INFO] Project config: {
+  "buildTool": {
+    "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+    "name": "mvn",
+    "version": "",
+    "source": "Homebrew,PATH"
+  },
+  "jdk": {
+    "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+    "name": "java",
+    "version": "25"
+  },
+  "name": "CI-CD-Laboratory",
+  "dir": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}
+2026-03-27T16:16:36.584Z [INFO] [MavenBuildTool] Getting all module coordinates of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:16:36.584Z [INFO] [MavenBuildTool] Getting effective POMs of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:16:36.584Z [INFO] [Environment] Running command (Java undefined): mvn help:effective-pom -Doutput=effective-pom-e0be3f42-2d88-4259-a4ed-b0eced044ebd.log
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:cicd-demo >------------------------
+[INFO] Building cicd-demo 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- help:3.5.1:effective-pom (default-cli) @ cicd-demo ---
+[INFO] Effective-POM written to: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/effective-pom-e0be3f42-2d88-4259-a4ed-b0eced044ebd.log
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.190 s
+[INFO] Finished at: 2026-03-27T16:16:37Z
+[INFO] ------------------------------------------------------------------------
+2026-03-27T16:16:37.383Z [INFO] [BaseBuildTool] Found 1 modules: .
+2026-03-27T16:16:37.387Z [INFO] [BaseBuildTool] Finish counting Java and class files
+2026-03-27T16:16:37.387Z [INFO] [MavenBuildTool] Cleaning /Users/gutembergmedeiros/Labs/CI-CD-Laboratory using Maven
+2026-03-27T16:16:37.387Z [INFO] [Environment] Running command (Java undefined): mvn clean -q -B -fn
+2026-03-27T16:16:38.075Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'buildCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:16:38.075Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:17:26.691Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:17:26.691Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "details": {
+    "stepNumber": 3,
+    "stepTitle": "Upgrade Java source/target to 25",
+    "commitId": "1377e86"
+  },
+  "event": "upgradeStepCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:17:26.691Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:17:26.691Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:17:26.691Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:17:26.705Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:17:26.706Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "details": {
+    "stepNumber": 3,
+    "stepTitle": "Upgrade Java source/target to 25",
+    "commitId": "1377e86"
+  },
+  "event": "upgradeStepCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:17:26.706Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:17:26.722Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'upgradeStepCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:17:26.722Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:17:51.894Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:17:51.895Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "testCompleted",
+  "message": "Final: 0/4 tests pass - matches baseline exactly; all failures due to PostgreSQL not available (pre-existing, not Java-related)",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:17:51.895Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:17:51.896Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:17:51.896Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:17:51.913Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:17:51.913Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "testCompleted",
+  "message": "Final: 0/4 tests pass - matches baseline exactly; all failures due to PostgreSQL not available (pre-existing, not Java-related)",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:17:51.913Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:17:51.913Z [INFO] Project /Users/gutembergmedeiros/Labs/CI-CD-Laboratory is a maven project, try to get java version from pom.xml
+2026-03-27T16:17:51.914Z [INFO] Project java version: 25
+2026-03-27T16:17:51.914Z [INFO] Maven project detected.
+2026-03-27T16:17:51.914Z [INFO] Build tool type: mvn
+2026-03-27T16:17:51.926Z [INFO] JDK: {
+  "name": "java",
+  "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+  "version": "25"
+}
+2026-03-27T16:17:51.927Z [INFO] Build tool: {
+  "name": "mvn",
+  "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+  "version": "",
+  "source": "Homebrew,PATH"
+}
+2026-03-27T16:17:51.927Z [INFO] Project config: {
+  "buildTool": {
+    "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+    "name": "mvn",
+    "version": "",
+    "source": "Homebrew,PATH"
+  },
+  "jdk": {
+    "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+    "name": "java",
+    "version": "25"
+  },
+  "name": "CI-CD-Laboratory",
+  "dir": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}
+2026-03-27T16:17:51.927Z [INFO] [BaseBuildTool] Gathering test results...
+2026-03-27T16:17:51.936Z [INFO] [BaseBuildTool] Summarizing surefire reports.
+2026-03-27T16:17:51.936Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'testCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:17:51.936Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:18:19.091Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:18:19.091Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "details": {
+    "commitId": "9092e77",
+    "stepNumber": 4,
+    "stepTitle": "Final Validation"
+  },
+  "event": "upgradeValidationCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:18:19.091Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:18:19.091Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:18:19.091Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:18:19.105Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:18:19.105Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "details": {
+    "commitId": "9092e77",
+    "stepNumber": 4,
+    "stepTitle": "Final Validation"
+  },
+  "event": "upgradeValidationCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:18:19.105Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:18:19.106Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'upgradeValidationCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:18:19.106Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:18:22.735Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:18:22.735Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "event": "planExecutionCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:18:22.735Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:18:22.735Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:18:22.735Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:18:22.752Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:18:22.752Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "event": "planExecutionCompleted",
+  "phase": "execute",
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618",
+  "status": "succeeded"
+}}).
+2026-03-27T16:18:22.752Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:18:22.772Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'planExecutionCompleted' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:18:22.772Z [INFO] ----------------------invoked appmod-report-event----------------------
+2026-03-27T16:18:57.986Z [INFO] ---------------------prepare appmod-validate-cves-for-java----------------------
+2026-03-27T16:18:57.986Z [INFO] [Tool.prepareInvocation]({name: appmod-validate-cves-for-java, input: {
+  "dependencies": [
+    "org.springframework.boot:spring-boot-starter-web:3.5.7",
+    "org.springframework.boot:spring-boot-starter-data-jpa:3.5.7",
+    "org.postgresql:postgresql:42.7.7",
+    "org.flywaydb:flyway-core:10.21.0",
+    "org.flywaydb:flyway-database-postgresql:10.21.0",
+    "org.projectlombok:lombok:1.18.44",
+    "org.springframework.boot:spring-boot-starter-actuator:3.5.7",
+    "org.springframework.boot:spring-boot-starter-validation:3.5.7",
+    "org.springframework.boot:spring-boot-starter-test:3.5.7",
+    "org.junit.jupiter:junit-jupiter:5.10.3"
+  ],
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618"
+}}).
+2026-03-27T16:18:57.986Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:18:57.986Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Validate CVEs"
+}}).
+2026-03-27T16:18:57.986Z [INFO] ----------------------prepared appmod-validate-cves-for-java----------------------
+2026-03-27T16:18:57.996Z [INFO] ----------------------invoke appmod-validate-cves-for-java----------------------
+2026-03-27T16:18:57.996Z [INFO] [Tool.invoke]({name: appmod-validate-cves-for-java, input: {
+  "dependencies": [
+    "org.springframework.boot:spring-boot-starter-web:3.5.7",
+    "org.springframework.boot:spring-boot-starter-data-jpa:3.5.7",
+    "org.postgresql:postgresql:42.7.7",
+    "org.flywaydb:flyway-core:10.21.0",
+    "org.flywaydb:flyway-database-postgresql:10.21.0",
+    "org.projectlombok:lombok:1.18.44",
+    "org.springframework.boot:spring-boot-starter-actuator:3.5.7",
+    "org.springframework.boot:spring-boot-starter-validation:3.5.7",
+    "org.springframework.boot:spring-boot-starter-test:3.5.7",
+    "org.junit.jupiter:junit-jupiter:5.10.3"
+  ],
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "sessionId": "20260327160618"
+}}).
+2026-03-27T16:18:57.996Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:18:57.996Z [INFO] Project /Users/gutembergmedeiros/Labs/CI-CD-Laboratory is a maven project, try to get java version from pom.xml
+2026-03-27T16:18:57.996Z [INFO] Project java version: 25
+2026-03-27T16:18:57.997Z [INFO] Maven project detected.
+2026-03-27T16:18:57.997Z [INFO] Build tool type: mvn
+2026-03-27T16:18:58.009Z [INFO] JDK: {
+  "name": "java",
+  "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+  "version": "25"
+}
+2026-03-27T16:18:58.010Z [INFO] Build tool: {
+  "name": "mvn",
+  "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+  "version": "",
+  "source": "Homebrew,PATH"
+}
+2026-03-27T16:18:58.010Z [INFO] Project config: {
+  "buildTool": {
+    "path": "/opt/homebrew/Cellar/maven/3.9.14/bin",
+    "name": "mvn",
+    "version": "",
+    "source": "Homebrew,PATH"
+  },
+  "jdk": {
+    "path": "/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home/bin",
+    "name": "java",
+    "version": "25"
+  },
+  "name": "CI-CD-Laboratory",
+  "dir": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory"
+}
+2026-03-27T16:18:58.010Z [INFO] [Environment] Running command (Java undefined): mvn dependency:tree -B
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:cicd-demo >------------------------
+[INFO] Building cicd-demo 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.7.0:tree (default-cli) @ cicd-demo ---
+[INFO] com.example:cicd-demo:jar:1.0.0-SNAPSHOT
+[INFO] +- org.springframework.boot:spring-boot-starter-web:jar:3.5.7:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:3.5.7:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot:jar:3.5.7:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:3.5.7:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:3.5.7:compile
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.20:compile
+[INFO] |  |  |  |  \- ch.qos.logback:logback-core:jar:1.5.20:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.24.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.24.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.17:compile
+[INFO] |  |  +- jakarta.annotation:jakarta.annotation-api:jar:2.1.1:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:2.4:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-json:jar:3.5.7:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.19.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.19.2:compile
+[INFO] |  |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.19.2:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:3.5.7:compile
+[INFO] |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:10.1.48:compile
+[INFO] |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:10.1.48:compile
+[INFO] |  +- org.springframework:spring-web:jar:6.2.12:compile
+[INFO] |  |  \- org.springframework:spring-beans:jar:6.2.12:compile
+[INFO] |  \- org.springframework:spring-webmvc:jar:6.2.12:compile
+[INFO] |     +- org.springframework:spring-aop:jar:6.2.12:compile
+[INFO] |     +- org.springframework:spring-context:jar:6.2.12:compile
+[INFO] |     \- org.springframework:spring-expression:jar:6.2.12:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-data-jpa:jar:3.5.7:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:3.5.7:compile
+[INFO] |  |  +- com.zaxxer:HikariCP:jar:6.3.3:compile
+[INFO] |  |  \- org.springframework:spring-jdbc:jar:6.2.12:compile
+[INFO] |  +- org.hibernate.orm:hibernate-core:jar:6.6.33.Final:compile
+[INFO] |  |  +- jakarta.persistence:jakarta.persistence-api:jar:3.1.0:compile
+[INFO] |  |  +- jakarta.transaction:jakarta.transaction-api:jar:2.0.1:compile
+[INFO] |  |  +- org.jboss.logging:jboss-logging:jar:3.5.0.Final:compile
+[INFO] |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:7.0.3.Final:runtime
+[INFO] |  |  +- io.smallrye:jandex:jar:3.2.0:runtime
+[INFO] |  |  +- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.15.11:runtime
+[INFO] |  |  +- org.glassfish.jaxb:jaxb-runtime:jar:4.0.2:runtime
+[INFO] |  |  |  \- org.glassfish.jaxb:jaxb-core:jar:4.0.2:runtime
+[INFO] |  |  |     +- org.eclipse.angus:angus-activation:jar:2.0.0:runtime
+[INFO] |  |  |     +- org.glassfish.jaxb:txw2:jar:4.0.2:runtime
+[INFO] |  |  |     \- com.sun.istack:istack-commons-runtime:jar:4.1.1:runtime
+[INFO] |  |  +- jakarta.inject:jakarta.inject-api:jar:2.0.1:runtime
+[INFO] |  |  \- org.antlr:antlr4-runtime:jar:4.13.0:compile
+[INFO] |  +- org.springframework.data:spring-data-jpa:jar:3.5.5:compile
+[INFO] |  |  +- org.springframework.data:spring-data-commons:jar:3.5.5:compile
+[INFO] |  |  +- org.springframework:spring-orm:jar:6.2.12:compile
+[INFO] |  |  +- org.springframework:spring-tx:jar:6.2.12:compile
+[INFO] |  |  \- org.slf4j:slf4j-api:jar:2.0.2:compile
+[INFO] |  \- org.springframework:spring-aspects:jar:6.2.12:compile
+[INFO] |     \- org.aspectj:aspectjweaver:jar:1.9.22.1:compile
+[INFO] +- org.postgresql:postgresql:jar:42.7.7:runtime
+[INFO] |  \- org.checkerframework:checker-qual:jar:3.49.3:runtime
+[INFO] +- org.flywaydb:flyway-core:jar:10.21.0:compile
+[INFO] |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-toml:jar:2.19.2:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-core:jar:2.19.2:compile
+[INFO] |  \- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.19.2:compile
+[INFO] |     \- com.fasterxml.jackson.core:jackson-annotations:jar:2.19.2:compile
+[INFO] +- org.flywaydb:flyway-database-postgresql:jar:10.21.0:compile
+[INFO] +- org.projectlombok:lombok:jar:1.18.44:provided
+[INFO] +- org.springframework.boot:spring-boot-starter-actuator:jar:3.5.7:compile
+[INFO] |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:3.5.7:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-actuator:jar:3.5.7:compile
+[INFO] |  +- io.micrometer:micrometer-observation:jar:1.15.5:compile
+[INFO] |  |  \- io.micrometer:micrometer-commons:jar:1.15.5:compile
+[INFO] |  \- io.micrometer:micrometer-jakarta9:jar:1.15.5:compile
+[INFO] |     \- io.micrometer:micrometer-core:jar:1.15.5:compile
+[INFO] |        +- org.hdrhistogram:HdrHistogram:jar:2.2.2:runtime
+[INFO] |        \- org.latencyutils:LatencyUtils:jar:2.0.3:runtime
+[INFO] +- org.springframework.boot:spring-boot-starter-validation:jar:3.5.7:compile
+[INFO] |  +- org.apache.tomcat.embed:tomcat-embed-el:jar:10.1.48:compile
+[INFO] |  \- org.hibernate.validator:hibernate-validator:jar:8.0.3.Final:compile
+[INFO] |     \- jakarta.validation:jakarta.validation-api:jar:3.0.2:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-test:jar:3.5.7:test
+[INFO] |  +- org.springframework.boot:spring-boot-test:jar:3.5.7:test
+[INFO] |  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:3.5.7:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:2.9.0:test
+[INFO] |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.4:runtime
+[INFO] |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.4:runtime
+[INFO] |  +- net.minidev:json-smart:jar:2.5.2:test
+[INFO] |  |  \- net.minidev:accessors-smart:jar:2.5.2:test
+[INFO] |  |     \- org.ow2.asm:asm:jar:9.7.1:test
+[INFO] |  +- org.assertj:assertj-core:jar:3.27.6:test
+[INFO] |  +- org.awaitility:awaitility:jar:4.2.2:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:3.0:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.17.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.15.11:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  +- org.mockito:mockito-junit-jupiter:jar:5.17.0:test
+[INFO] |  +- org.skyscreamer:jsonassert:jar:1.5.3:test
+[INFO] |  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[INFO] |  +- org.springframework:spring-core:jar:6.2.12:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:6.2.12:compile
+[INFO] |  +- org.springframework:spring-test:jar:6.2.12:test
+[INFO] |  \- org.xmlunit:xmlunit-core:jar:2.10.4:test
+[INFO] \- org.junit.jupiter:junit-jupiter:jar:5.10.3:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-api:jar:5.10.3:test
+[INFO]    |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO]    |  +- org.junit.platform:junit-platform-commons:jar:1.10.3:test
+[INFO]    |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO]    +- org.junit.jupiter:junit-jupiter-params:jar:5.10.3:test
+[INFO]    \- org.junit.jupiter:junit-jupiter-engine:jar:5.10.3:test
+[INFO]       \- org.junit.platform:junit-platform-engine:jar:1.10.3:test
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.417 s
+[INFO] Finished at: 2026-03-27T16:18:58Z
+[INFO] ------------------------------------------------------------------------
+2026-03-27T16:18:59.004Z [INFO] [MavenBuildTool] Successfully got dependency tree of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:18:59.005Z [INFO] [MavenBuildTool] Getting Java version of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory from pom.xml
+2026-03-27T16:18:59.005Z [INFO] [MavenBuildTool] Searching for pom.xml files in /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:18:59.005Z [INFO] [MavenBuildTool] Getting all module coordinates of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:18:59.005Z [INFO] [MavenBuildTool] Getting effective POMs of /Users/gutembergmedeiros/Labs/CI-CD-Laboratory
+2026-03-27T16:18:59.005Z [INFO] [Environment] Running command (Java undefined): mvn help:effective-pom -Doutput=effective-pom-b9b7978f-3413-4576-aa93-df563fb83e48.log
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.example:cicd-demo >------------------------
+[INFO] Building cicd-demo 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- help:3.5.1:effective-pom (default-cli) @ cicd-demo ---
+[INFO] Effective-POM written to: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/effective-pom-b9b7978f-3413-4576-aa93-df563fb83e48.log
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.177 s
+[INFO] Finished at: 2026-03-27T16:18:59Z
+[INFO] ------------------------------------------------------------------------
+2026-03-27T16:18:59.746Z [INFO] [MavenBuildTool] Found pom.xml files: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/pom.xml
+2026-03-27T16:18:59.746Z [INFO] [MavenBuildTool] Java version found in /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/pom.xml: 25
+2026-03-27T16:18:59.756Z [INFO] Getting CVEs for dependencies: org.springframework.boot:spring-boot-starter-web:3.5.7,org.springframework.boot:spring-boot-starter-data-jpa:3.5.7,org.postgresql:postgresql:42.7.7,org.flywaydb:flyway-core:10.21.0,org.flywaydb:flyway-database-postgresql:10.21.0,org.projectlombok:lombok:1.18.44,org.springframework.boot:spring-boot-starter-actuator:3.5.7,org.springframework.boot:spring-boot-starter-validation:3.5.7,org.springframework.boot:spring-boot-starter-test:3.5.7,org.junit.jupiter:junit-jupiter:5.10.3
+2026-03-27T16:18:59.756Z [INFO] getting CVEs for dependencies:
+ - org.springframework.boot:spring-boot-starter-web:3.5.7
+  - org.springframework.boot:spring-boot-starter-data-jpa:3.5.7
+  - org.postgresql:postgresql:42.7.7
+  - org.flywaydb:flyway-core:10.21.0
+  - org.flywaydb:flyway-database-postgresql:10.21.0
+  - org.projectlombok:lombok:1.18.44
+  - org.springframework.boot:spring-boot-starter-actuator:3.5.7
+  - org.springframework.boot:spring-boot-starter-validation:3.5.7
+  - org.springframework.boot:spring-boot-starter-test:3.5.7
+  - org.junit.jupiter:junit-jupiter:5.10.3...
+2026-03-27T16:18:59.757Z [INFO] getting gitHub access token...
+2026-03-27T16:18:59.758Z [INFO] Processing batch 1/1, size: 10
+2026-03-27T16:18:59.758Z [INFO] Proxy configuration: HTTPS_PROXY=(not set), HTTP_PROXY=(not set), NO_PROXY=(not set), NODE_EXTRA_CA_CERTS=(not set), vscode http.proxy=(not set), hasProxy=false
+2026-03-27T16:18:59.758Z [INFO] No proxy detected, using direct connection.
+2026-03-27T16:18:59.758Z [INFO] listing CVEs from GitHub for dependencies [
+  "org.springframework.boot:spring-boot-starter-web:3.5.7",
+  "org.springframework.boot:spring-boot-starter-data-jpa:3.5.7",
+  "org.postgresql:postgresql:42.7.7",
+  "org.flywaydb:flyway-core:10.21.0",
+  "org.flywaydb:flyway-database-postgresql:10.21.0",
+  "org.projectlombok:lombok:1.18.44",
+  "org.springframework.boot:spring-boot-starter-actuator:3.5.7",
+  "org.springframework.boot:spring-boot-starter-validation:3.5.7",
+  "org.springframework.boot:spring-boot-starter-test:3.5.7",
+  "org.junit.jupiter:junit-jupiter:5.10.3"
+]
+2026-03-27T16:19:00.151Z [INFO] Fetched 2 total advisories across all pages
+2026-03-27T16:19:00.152Z [INFO] grouping CVEs and finding max patched version by dep...
+2026-03-27T16:19:00.152Z [INFO] done getting 1 CVEs for 10 dependencies
+2026-03-27T16:19:00.152Z [INFO] calculating patched version by dep...
+2026-03-27T16:19:00.152Z [INFO] CVE CVE-2026-22731 for org.springframework.boot:spring-boot-starter-actuator:3.5.7: patched version 3.5.12
+2026-03-27T16:19:00.153Z [INFO] CVE CVE-2026-22733 for org.springframework.boot:spring-boot-starter-actuator:3.5.7: patched version 3.5.12
+2026-03-27T16:19:00.153Z [INFO] finished getting CVEs for dependencies.
+2026-03-27T16:19:00.153Z [INFO] Found 1 dependencies with known CVEs
+2026-03-27T16:19:00.153Z [INFO] CVE issues found:
+- Dependency `org.springframework.boot:spring-boot-starter-actuator:3.5.7` has **2** known CVEs need to be fixed:
+  - [CVE-2026-22731](https://github.com/advisories/GHSA-8hfc-fq58-r658): Spring Boot has an Authentication Bypass under Actuator Health groups paths
+    - **Severity**: **HIGH**
+    - **Details**: Spring Boot applications with Actuator can be vulnerable to an "Authentication Bypass" vulnerability when an application endpoint that requires authentication is declared under a specific path, already configured for a Health Group additional path.
+      This issue affects Spring Boot: from 4.0 before 4.0.3, from 3.5 before 3.5.11, from 3.4 before 3.4.15.
+      This CVE is similar but not equivalent to CVE-2026-22733, as the conditions for exploit and vulnerable versions are different.
+  - [CVE-2026-22733](https://github.com/advisories/GHSA-mgvc-8q2h-5pgc): Spring Boot has an Authentication Bypass under Actuator CloudFoundry endpoints
+    - **Severity**: **HIGH**
+    - **Details**: Spring Boot applications with Actuator can be vulnerable to an "Authentication Bypass" vulnerability when an application endpoint that requires authentication is declared under the path used by the CloudFoundry Actuator endpoints. This issue affects Spring Security: from 4.0.0 through 4.0.3, from 3.5.0 through 3.5.11, from 3.4.0 through 3.4.14, from 3.3.0 through 3.3.17, from 2.7.0 through 2.7.31.
+2026-03-27T16:19:00.153Z [INFO] [Tool.invoke]({result: {
+  "message": "The following dependencies have known CVEs that need to be fixed:\n- Dependency `org.springframework.boot:spring-boot-starter-actuator:3.5.7` has **2** known CVEs need to be fixed:\n  - [CVE-2026-22731](https://github.com/advisories/GHSA-8hfc-fq58-r658): Spring Boot has an Authentication Bypass under Actuator Health groups paths\n    - **Severity**: **HIGH**\n    - **Details**: Spring Boot applications with Actuator can be vulnerable to an \"Authentication Bypass\" vulnerability when an application endpoint that requires authentication is declared under a specific path, already configured for a Health Group additional path.\n      This issue affects Spring Boot: from 4.0 before 4.0.3, from 3.5 before 3.5.11, from 3.4 before 3.4.15.\n      This CVE is similar but not equivalent to CVE-2026-22733, as the conditions for exploit and vulnerable versions are different.\n  - [CVE-2026-22733](https://github.com/advisories/GHSA-mgvc-8q2h-5pgc): Spring Boot has an Authentication Bypass under Actuator CloudFoundry endpoints\n    - **Severity**: **HIGH**\n    - **Details**: Spring Boot applications with Actuator can be vulnerable to an \"Authentication Bypass\" vulnerability when an application endpoint that requires authentication is declared under the path used by the CloudFoundry Actuator endpoints. This issue affects Spring Security: from 4.0.0 through 4.0.3, from 3.5.0 through 3.5.11, from 3.4.0 through 3.4.14, from 3.3.0 through 3.3.17, from 2.7.0 through 2.7.31.",
+  "result": [
+    {
+      "cves": [
+        {
+          "id": "CVE-2026-22731",
+          "ghsa_id": "GHSA-8hfc-fq58-r658",
+          "severity": "high",
+          "summary": "Spring Boot has an Authentication Bypass under Actuator Health groups paths",
+          "description": "Spring Boot applications with Actuator can be vulnerable to an \"Authentication Bypass\" vulnerability when an application endpoint that requires authentication is declared under a specific path, already configured for a Health Group additional path.\nThis issue affects Spring Boot: from 4.0 before 4.0.3, from 3.5 before 3.5.11, from 3.4 before 3.4.15.\nThis CVE is similar but not equivalent to CVE-2026-22733, as the conditions for exploit and vulnerable versions are different.",
+          "html_url": "https://github.com/advisories/GHSA-8hfc-fq58-r658",
+          "affectedDeps": [
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 3.4.0, <= 3.4.13",
+              "patchedVersion": null
+            },
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 3.5.0, < 3.5.12",
+              "patchedVersion": "3.5.12"
+            },
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 4.0.0-M1, < 4.0.4",
+              "patchedVersion": "4.0.4"
+            }
+          ]
+        },
+        {
+          "id": "CVE-2026-22733",
+          "ghsa_id": "GHSA-mgvc-8q2h-5pgc",
+          "severity": "high",
+          "summary": "Spring Boot has an Authentication Bypass under Actuator CloudFoundry endpoints",
+          "description": "Spring Boot applications with Actuator can be vulnerable to an \"Authentication Bypass\" vulnerability when an application endpoint that requires authentication is declared under the path used by the CloudFoundry Actuator endpoints. This issue affects Spring Security: from 4.0.0 through 4.0.3, from 3.5.0 through 3.5.11, from 3.4.0 through 3.4.14, from 3.3.0 through 3.3.17, from 2.7.0 through 2.7.31.",
+          "html_url": "https://github.com/advisories/GHSA-mgvc-8q2h-5pgc",
+          "affectedDeps": [
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 4.0.0-M1, < 4.0.4",
+              "patchedVersion": "4.0.4"
+            },
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 3.5.0, < 3.5.12",
+              "patchedVersion": "3.5.12"
+            },
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 3.4.0, <= 3.4.13",
+              "patchedVersion": null
+            },
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": ">= 3.0.0, <= 3.3.13",
+              "patchedVersion": null
+            },
+            {
+              "name": "org.springframework.boot:spring-boot-starter-actuator",
+              "vulVersions": "<= 2.7.18",
+              "patchedVersion": null
+            }
+          ]
+        }
+      ],
+      "dep": "org.springframework.boot:spring-boot-starter-actuator:3.5.7",
+      "name": "org.springframework.boot:spring-boot-starter-actuator",
+      "version": "3.5.7",
+      "semver": "3.5.7",
+      "unfixableCves": [],
+      "patchedVersion": "3.5.12"
+    }
+  ],
+  "telemetry": {
+    "cve.high": 2,
+    "cves": "{\"CVE-2026-22731\":1,\"CVE-2026-22733\":1}"
+  }
+}}).
+2026-03-27T16:19:00.153Z [INFO] ----------------------invoked appmod-validate-cves-for-java----------------------
+2026-03-27T16:21:37.134Z [INFO] ---------------------prepare appmod-report-event----------------------
+2026-03-27T16:21:37.135Z [INFO] [Tool.prepareInvocation]({name: appmod-report-event, input: {
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "event": "summaryGenerated",
+  "phase": "summarize",
+  "status": "succeeded",
+  "sessionId": "20260327160618",
+  "message": "Java 21 to 25 upgrade complete. Lombok upgraded 1.18.36→1.18.44 for Java 25 compatibility. 2 HIGH CVEs found in spring-boot-starter-actuator:3.5.7; recommend Spring Boot upgrade to 3.5.12+."
+}}).
+2026-03-27T16:21:37.135Z [INFO] [Tool.prepareInvocation] do prepare invocation.
+2026-03-27T16:21:37.135Z [INFO] [Tool.prepareInvocation]({result: {
+  "invocationMessage": "Report upgrade event"
+}}).
+2026-03-27T16:21:37.135Z [INFO] ----------------------prepared appmod-report-event----------------------
+2026-03-27T16:21:37.151Z [INFO] ----------------------invoke appmod-report-event----------------------
+2026-03-27T16:21:37.152Z [INFO] [Tool.invoke]({name: appmod-report-event, input: {
+  "projectPath": "/Users/gutembergmedeiros/Labs/CI-CD-Laboratory",
+  "event": "summaryGenerated",
+  "phase": "summarize",
+  "status": "succeeded",
+  "sessionId": "20260327160618",
+  "message": "Java 21 to 25 upgrade complete. Lombok upgraded 1.18.36→1.18.44 for Java 25 compatibility. 2 HIGH CVEs found in spring-boot-starter-actuator:3.5.7; recommend Spring Boot upgrade to 3.5.12+."
+}}).
+2026-03-27T16:21:37.152Z [INFO] [Tool.invoke] do invoke.
+2026-03-27T16:21:37.169Z [INFO] [Tool.invoke]({result: {
+  "message": "Event 'summaryGenerated' reported!\nSession ID: 20260327160618,\nSession Dir: /Users/gutembergmedeiros/Labs/CI-CD-Laboratory/.github/java-upgrade/20260327160618"
+}}).
+2026-03-27T16:21:37.169Z [INFO] ----------------------invoked appmod-report-event----------------------
