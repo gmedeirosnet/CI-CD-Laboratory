@@ -1,27 +1,83 @@
-# Operating System Files
+# =============================================================================
+# .gitignore — DevOps CI/CD Learning Laboratory
+# =============================================================================
+
+# =============================================================================
+# Operating System
+# =============================================================================
+
+# macOS
 .DS_Store
 .DS_Store?
 ._*
+.AppleDouble
+.LSOverride
 .Spotlight-V100
 .Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
+Icon
 
-# IDE and Editor Files
-.vscode/
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# IDE and Editors
+# =============================================================================
+
+# JetBrains (IntelliJ, GoLand, etc.)
 .idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# Vim / Emacs
 *.swp
 *.swo
 *~
-.project
-.classpath
-.settings/
-*.sublime-project
-*.sublime-workspace
 .metadata/
 
-# Java / Maven
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# =============================================================================
+# Java / Maven (Backend)
+# =============================================================================
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -33,44 +89,82 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-# Gradle
-.gradle/
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+# =============================================================================
+# Node.js / Frontend (React + Vite)
+# =============================================================================
 
-# IntelliJ IDEA
-*.iml
-*.ipr
-*.iws
-.idea/
-out/
+node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+.npm
+.eslintcache
+.node_repl_history
+.yarn-integrity
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Eclipse
-.classpath
-.project
-.settings/
-bin/
+# Lock files — keep package-lock.json for reproducible CI/CD builds
+yarn.lock
 
-# NetBeans
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
+# =============================================================================
 # Docker
-*.log
-.dockerignore
+# =============================================================================
 
+# Note: .dockerignore files should be tracked in git — do NOT add them here
+
+# =============================================================================
 # Kubernetes
+# =============================================================================
+
 *.kubeconfig
 kubeconfig
 .kube/
 
+# =============================================================================
+# Harbor Container Registry
+# =============================================================================
+
+harbor/data/
+harbor/logs/
+harbor/common/config/
+harbor/harbor.yml
+harbor/prepare
+
+# =============================================================================
+# Jenkins
+# =============================================================================
+
+.jenkins/
+jenkins_home/
+jenkins-pipeline.log
+
+# =============================================================================
+# SonarQube
+# =============================================================================
+
+.sonar/
+.scannerwork/
+
+# =============================================================================
+# ArgoCD
+# =============================================================================
+
+argocd-secret.yaml
+
+# =============================================================================
+# Helm
+# =============================================================================
+
+charts/*/charts/
+charts/*/tmpcharts/
+
+# =============================================================================
 # Terraform
+# =============================================================================
+
 *.tfstate
 *.tfstate.*
 .terraform/
@@ -83,47 +177,46 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# =============================================================================
 # Ansible
+# =============================================================================
+
 *.retry
 .vault_pass
-*.log
+.vault_pass.txt
+vault_pass
 
-# Jenkins
-.jenkins/
-jenkins_home/
+# =============================================================================
+# Secrets, Credentials and Certificates
+# =============================================================================
 
-# SonarQube
-.sonar/
-.scannerwork/
-
-# Harbor
-harbor/data/
-harbor/logs/
-
-# AWS
-.aws/
-*.pem
-*.key
-
-# Secrets and Credentials
-*.env
+# Environment files (.env.template is intentionally NOT ignored)
 .env
 .env.local
 .env.*.local
+
+# Generic secret patterns
 secrets.yml
 secrets.yaml
 *secret*
 *password*
 *credentials*
+
+# Certificates and keys
+*.pem
+*.key
 *.cer
 *.crt
 *.der
+*.p7b
+*.p7c
 *.p12
 *.pfx
-*.key
-*.pem
+*.keystore
+*.jks
+*.truststore
 
-# SSH Keys
+# SSH keys
 id_rsa
 id_rsa.pub
 id_dsa
@@ -134,213 +227,92 @@ id_ed25519
 id_ed25519.pub
 known_hosts
 
-# Logs
+# Cloud provider credentials
+.aws/
+
+# =============================================================================
+# Logs and Runtime Data
+# =============================================================================
+
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-jenkins-pipeline.log
-
-# Runtime data
+error.log
 pids/
 *.pid
 *.seed
 *.pid.lock
 
-# Coverage and Test Reports
+# =============================================================================
+# Test Results and Coverage Reports
+# =============================================================================
+
 coverage/
 *.cover
-.hypothesis/
-.pytest_cache/
 htmlcov/
-.tox/
 .coverage
 .coverage.*
+.hypothesis/
+.pytest_cache/
+.tox/
 nosetests.xml
 test-results/
 junit.xml
 
-# Backup Files
-*.bak
-*.backup
-*.old
-*.orig
-*.tmp
-*~
+# =============================================================================
+# Temporary and Cache Files
+# =============================================================================
 
-# Compressed Files
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-*.war
-*.ear
-
-# Helm
-*.tgz
-charts/*/charts/
-charts/*/tmpcharts/
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-*.egg
-*.egg-info/
-dist/
-build/
-*.whl
-.installed.cfg
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Node.js
-node_modules/
-npm-debug.log
-yarn-error.log
-.npm
-.eslintcache
-.node_repl_history
-*.tgz
-.yarn-integrity
-
-# Ruby
-*.gem
-*.rbc
-.bundle/
-vendor/bundle/
-.ruby-version
-.ruby-gemset
-
-# Go
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-vendor/
-
-# Temporary Files
 tmp/
 temp/
 *.tmp
 *.temp
+*.bak
+*.backup
+*.old
+*.orig
 .cache/
-generate-release-notes.sh
 .venv
+venv/
 
-# Database
-*.sqlite3
-*.db
+# =============================================================================
+# Archives and Compressed Files
+# =============================================================================
 
-# Exception: Allow Flyway migration files
-!src/main/resources/db/migration/*.sql
-
-# Package Managers
-# package-lock.json should be committed for reproducible builds in CI/CD
-yarn.lock
-Gemfile.lock
-
-# CI/CD
-.gitlab-ci-local/
-
-# Local Configuration
-local.properties
-local_settings.py
-settings_local.py
-config.local.yml
-
-# macOS
-.AppleDouble
-.LSOverride
-Icon
-._*
-
-# Windows
-Thumbs.db
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
-
-# Linux
-*~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
-
-# Certificates
-*.crt
-*.cer
-*.der
-*.pem
-*.p7b
-*.p7c
-*.p12
-*.pfx
-*.keystore
-*.jks
-*.truststore
-
-# Archives and Installers
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
 *.tar.gz
 *.tgz
 *.zip
-*.rar
-*.7z
-*.dmg
-*.pkg
+*.war
+*.ear
+*.jar
 *.deb
 *.rpm
+*.pkg
 
-# JetBrains IDEs
-.idea/
-*.iml
-*.ipr
-*.iws
-out/
+# =============================================================================
+# CI/CD
+# =============================================================================
 
-# VS Code
-.vscode/
-*.code-workspace
+.gitlab-ci-local/
 
-# Vagrant
-.vagrant/
-*.box
+# =============================================================================
+# Local Configuration Overrides
+# =============================================================================
 
-# Ansible Vault
-.vault_pass.txt
-vault_pass
+local.properties
+config.local.yml
 
-# ArgoCD
-argocd-secret.yaml
+# =============================================================================
+# Project-specific Exceptions
+# =============================================================================
 
-# Custom - Add your specific ignores below
-# ==========================================
-error.log
-instructions/
-copilot-instructions.md
-.github/
-DevOps.agent.md
+# Allow Flyway migration SQL files (excluded by *.sql-like patterns elsewhere)
+!src/main/resources/db/migration/*.sql
+
+# Allow Helm chart archives in specific locations if needed
+# !helm-charts/**/*.tgz
