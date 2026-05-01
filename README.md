@@ -1,11 +1,13 @@
-### LEARNING CONTINUOUS INTEGRATION AND CONTINUOUS DELIVERY ###
-# DevOps CI/CD Learning Laboratory
 
+# DevOps CI/CD Hands-on LAB
+### LEARNING CONTINUOUS INTEGRATION AND CONTINUOUS DELIVERY ###
 A comprehensive hands-on laboratory environment for learning DevOps CI/CD deployment tools and practices.
+
 
 ## Overview
 
 This repository provides a complete learning experience for mastering DevOps CI/CD tools through practical, hands-on labs. The curriculum focuses on 10 industry-standard tools that form the backbone of modern DevOps practices.
+
 
 ## Tools Covered
 
