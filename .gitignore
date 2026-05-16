@@ -319,3 +319,4 @@ config.local.yml
 
 ## Add other
 .superpowers
+.superpowers/*
