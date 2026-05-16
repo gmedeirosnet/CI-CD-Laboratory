@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] — branch: BlackDuck
+
+### Commit Log (chronological)
+
+| Hash | Date | Description |
+|------|------|-------------|
+| `9c5b105` | 2026-05-16 | docs: add BlackDuck Detect integration design spec |
+
+---
+
+### BlackDuck Detect Integration Design (2026-05-16) — `9c5b105`
+
+#### Added
+- Created `docs/superpowers/specs/2026-05-16-blackduck-integration-design.md` — full design spec for integrating Black Duck Detect as a Docker-based Jenkins stage
+
+#### Design Decisions
+- **Approach**: Detect-only (no Hub server) — runs `blackducksoftware/detect` as a one-shot Docker container
+- **Pipeline position**: Stage 7, between `Build Docker Image` and `Push to Harbor`
+- **Failure mode**: Audit mode — always exits 0, never blocks the pipeline
+- **Hub integration**: Optional — Detect runs offline if `BLACKDUCK_URL` / `BLACKDUCK_API_TOKEN` are absent
+- **New env vars**: `BLACKDUCK_DETECT_VERSION`, `BLACKDUCK_PROJECT_NAME`, `BLACKDUCK_PROJECT_VERSION`, `BLACKDUCK_URL`, `BLACKDUCK_API_TOKEN`
+- **Outputs**: `blackduck-reports/detect-output.txt` + `risk-report.json` archived as Jenkins artifacts
+
+#### Planned File Changes (implementation pending)
+- `Jenkinsfile` — new stage `BlackDuck Detect Scan` at position 7
+- `docker/blackduck/docker-compose.yml` — optional standalone runner
+- `docs/BlackDuck.md` — new tool guide
+- `.env.template` — 5 new variables
+- `docs/INDEX.md`, `docs/Port-Reference.md`, `CLAUDE.md` — minor updates
+
+---
+
 ## [Unreleased] — branch: feature--Updated-versions
 
 ### Commit Log (chronological)
