@@ -122,6 +122,7 @@ echo "- PostgreSQL database (deployed separately)"
 echo "- Grafana visualization platform"
 echo "- Loki log aggregation system"
 echo "- Prometheus metrics collection"
+echo "- Black Duck Detect (SCA scanning)"
 echo "- Kyverno policy engine"
 echo "- Policy Reporter (Kyverno observability)"
 echo ""
@@ -643,6 +644,22 @@ fi
 echo ""
 
 ################################################################################
+# Step 7.7: Verify Black Duck Detect Image
+################################################################################
+
+print_header "Step 7.7: Verifying Black Duck Detect"
+
+BLACKDUCK_DETECT_VERSION="${BLACKDUCK_DETECT_VERSION:-latest}"
+print_info "Pulling blackducksoftware/detect:${BLACKDUCK_DETECT_VERSION} (used in pipeline SCA stage)..."
+if docker pull "blackducksoftware/detect:${BLACKDUCK_DETECT_VERSION}" > /dev/null 2>&1; then
+    print_success "Black Duck Detect image ready: blackducksoftware/detect:${BLACKDUCK_DETECT_VERSION}"
+else
+    print_warning "Could not pull Black Duck Detect image (offline mode will still work in pipeline)"
+fi
+
+echo ""
+
+################################################################################
 # Step 8: Build Demo Application
 ################################################################################
 
@@ -911,6 +928,7 @@ echo "  - Loki:            http://localhost:31000"
 echo "  - Prometheus:      http://localhost:30090"
 echo "  - ArgoCD:          https://localhost:8090"
 echo "  - Policy Reporter: http://localhost:31002 (UI) | http://localhost:31001 (API)"
+echo "  - BlackDuck:       Reports in Jenkins build artifacts (blackduck-reports/)"
 echo ""
 echo "Credentials:"
 echo "  - Jenkins:   admin / $JENKINS_PASSWORD"
@@ -968,7 +986,11 @@ echo "   - SonarQube:  Create project 'cicd-demo' and generate token"
 echo "   - Harbor:     Create robot account for image push/pull"
 echo "   - ArgoCD:     Connect Git repository for GitOps deployments"
 echo ""
-echo -e "${BLUE}8. Access Application (after deployment)${NC}"
+echo -e "${BLUE}8. View Black Duck Detect SCA Reports${NC}"
+echo "   - Reports archived as Jenkins build artifacts after each build"
+echo "   - See docs/BlackDuck.md for Hub connection and strict mode options"
+echo ""
+echo -e "${BLUE}9. Access Application (after deployment)${NC}"
 echo "   - Frontend UI:  http://localhost:8001"
 echo "   - Backend API:  http://localhost:8001/api/tasks"
 echo "   - Health Check: http://localhost:8001/actuator/health"
@@ -985,6 +1007,9 @@ echo -e "${BLUE}Testing & Validation:${NC}"
 echo "  docs/TESTING-Guide.md           - Comprehensive testing framework"
 echo "  docs/TESTING-Scenarios.md       - 33 test scenarios across 8 categories"
 echo "  docs/POSTGRES-TEST-REPORT.md    - Database validation results"
+echo ""
+echo -e "${BLUE}Code Quality & Security:${NC}"
+echo "  docs/BlackDuck.md               - Black Duck Detect SCA guide"
 echo ""
 echo -e "${BLUE}Operations & Troubleshooting:${NC}"
 echo "  docs/Troubleshooting.md         - Common issues with decision trees"
