@@ -194,63 +194,7 @@ cd policy-reporter
 ./k8s/k8s-permissions_port-forward.sh restart
 ```
 
-### Manual Setup Steps
-
-If you prefer step-by-step setup:
-
-1. **Verify Prerequisites**
-   ```bash
-   ./scripts/verify-environment.sh
-   ```
-
-2. **Configure Environment**
-   ```bash
-   # Copy environment template and configure your credentials
-   cp .env.template .env
-
-   # Edit .env with your values:
-   # - GitHub username and personal access token
-   # - Harbor registry credentials
-   # - Jenkins admin password
-   # - SonarQube token
-   # - ArgoCD admin password
-   # - Other service credentials
-
-   # IMPORTANT: Never commit .env to version control
-   nano .env  # or use your preferred editor
-   ```
-
-3. **Create Kind Cluster**
-   ```bash
-   kind create cluster --config kind-config.yaml
-   ```
-
-4. **Start Services**
-   ```bash
-   # Harbor
-   cd harbor && docker-compose up -d
-
-   # Jenkins
-   ./scripts/setup-jenkins-docker.sh
-
-   # SonarQube
-   ./scripts/setup-sonarqube.sh
-
-   # Grafana + Loki + Prometheus
-   cd k8s/grafana
-   ./setup-loki.sh
-   ./setup-prometheus.sh
-   ./setup-grafana-docker.sh
-
-   # ArgoCD
-   kubectl create namespace argocd
-   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-   ```
-
-5. **Build Application**
-   ```bash
-   mvn clean package
-   ```
+For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
 
 ### First Steps After Setup
 
