@@ -1,0 +1,69 @@
+<h2>BlackDuck Integration — 3 Approaches</h2>
+<p class="subtitle">Where and how Black Duck Detect + Hub fit into this lab</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Recommended — Detect-only Docker container (no Hub)</h3>
+      <p>Run <code>blackducksoftware/detect</code> as a one-shot Docker container in the Jenkins stage. Detect scans the built image layers and dependency files, writes a JSON/text report to the workspace, and exits. No persistent Hub server needed.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Simple — single container, no infra overhead</li>
+          <li>Fast to set up</li>
+          <li>No license server required</li>
+          <li>Follows lab's Docker Compose pattern</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>No persistent UI to browse findings over time</li>
+          <li>Results live only in Jenkins console + artifact files</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Full Black Duck Hub via Docker Compose</h3>
+      <p>Stand up the complete Black Duck Hub stack (hub-webapp, hub-postgres, hub-registration, hub-scan, hub-jobrunner) via Docker Compose. Detect connects to it. Results visible in Hub's full web UI.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Full production-like UI and API</li>
+          <li>Policy management, license compliance, project history</li>
+          <li>Most complete learning experience</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Requires a valid Black Duck license/activation key</li>
+          <li>Heavy: 6+ containers, 8-16 GB RAM</li>
+          <li>Port management complexity (adds 8083+)</li>
+          <li>Slow startup (5-10 min)</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Detect + lightweight SBOM viewer (Syft + Grype)</h3>
+      <p>Use Syft to generate an SBOM from the Docker image, Grype to scan it for CVEs, and serve results via a simple HTML report. Conceptually equivalent to Black Duck Detect but fully open-source and zero-license.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul>
+          <li>Zero licensing friction</li>
+          <li>Very fast and lightweight</li>
+          <li>Generates industry-standard SBOM (SPDX/CycloneDX)</li>
+        </ul></div>
+        <div class="cons"><h4>Cons</h4><ul>
+          <li>Not actually Black Duck — different tool, different learnings</li>
+          <li>No Black Duck-specific Jenkins plugin experience</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:1.5rem">
+  <p class="label">My recommendation</p>
+  <p>Option <strong>A</strong> fits the lab best: it adds Black Duck Detect as a real Jenkins stage using the official Docker image, follows the existing Docker-based pattern, and requires no license server. Option B is the most complete but the licensing and resource cost is high for a learning lab. Option C is a good fallback if Black Duck Detect requires a license key at runtime.</p>
+</div>
