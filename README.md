@@ -27,8 +27,9 @@ This repository provides a complete learning experience for mastering DevOps CI/
 - **Kyverno** - Kubernetes-native policy engine for security and compliance
 - **Policy Reporter** - Kyverno policy violation monitoring and reporting
 
-### Code Quality & Observability
+### Code Quality, Security & Observability
 - **SonarQube** - Code quality and security analysis
+- **Black Duck Detect** - Software Composition Analysis (SCA) for open-source vulnerability and license scanning
 - **Grafana** - Unified visualization and monitoring dashboard
 - **Loki** - Log aggregation and querying system
 - **Prometheus** - Metrics collection and time-series database
@@ -39,7 +40,7 @@ This lab includes a **full-stack production-grade application** demonstrating re
 
 ### Three-Tier Architecture
 - **Database Layer**: PostgreSQL 16 with persistent storage (StatefulSet + PVC)
-- **Backend Layer**: Spring Boot 3.5.7 + Java 21 with JPA/Hibernate and REST API
+- **Backend Layer**: Spring Boot 3.5.7 + Java 25 with JPA/Hibernate and REST API
 - **Frontend Layer**: React 19 + TypeScript + Vite with responsive UI
 
 ### Key Features
@@ -364,7 +365,7 @@ If you prefer step-by-step setup:
 ```
 Developer → GitHub → Jenkins → Maven → SonarQube
                          ↓
-                    Docker Build → Harbor
+                    Docker Build → BlackDuck Detect (SCA) → Harbor
                          ↓
                     Kind Image Load → Helm Package → ArgoCD → Kind K8s
                                                                  ↓
@@ -390,20 +391,21 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 2. **Build** - Maven compilation and unit tests
 3. **Quality Gate** - SonarQube code analysis
 4. **Containerization** - Docker image build and tag
-5. **Registry** - Push to Harbor with vulnerability scanning
-6. **Image Loading** - Load images into Kind cluster nodes
-7. **Packaging** - Helm chart update with new image tag
-8. **GitOps Sync** - ArgoCD deploys to Kubernetes
-9. **Policy Validation** - Kyverno validates resources (Audit mode)
-10. **Monitoring** - Logs to Loki, metrics to Prometheus, violations to Policy Reporter
-11. **Visualization** - Grafana dashboards and Policy Reporter UI
+5. **SCA Scan** - Black Duck Detect scans dependencies and JAR for CVEs and license issues (audit mode)
+6. **Registry** - Push to Harbor
+7. **Image Loading** - Load images into Kind cluster nodes
+8. **Packaging** - Helm chart update with new image tag
+9. **GitOps Sync** - ArgoCD deploys to Kubernetes
+10. **Policy Validation** - Kyverno validates resources (Audit mode)
+11. **Monitoring** - Logs to Loki, metrics to Prometheus, violations to Policy Reporter
+12. **Visualization** - Grafana dashboards and Policy Reporter UI
 
 ## Key Features
 
 - **Complete CI/CD Pipeline** - From code commit to Kubernetes deployment with automated image loading
 - **Full-Stack Application** - PostgreSQL + Spring Boot (JPA/REST) + React (TypeScript) production architecture
 - **Database Layer** - PostgreSQL 16 with StatefulSet, persistent volumes, and Flyway migrations
-- **Modern Backend** - Spring Boot 3.5.7, Java 21, REST API with 8 endpoints, Actuator metrics
+- **Modern Backend** - Spring Boot 3.5.7, Java 25, REST API with 8 endpoints, Actuator metrics
 - **Modern Frontend** - React 19, TypeScript, Vite bundler, TanStack Query, Tailwind CSS
 - **Observability Stack** - Integrated logging (Loki) and metrics (Prometheus) with Grafana visualization
 - **Policy Enforcement** - Kyverno policy engine in Audit mode with Policy Reporter dashboard
@@ -436,6 +438,7 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 - [Helm](docs/Helm-Charts.md) - Package management
 - [ArgoCD](docs/ArgoCD.md) - GitOps deployment
 - [SonarQube](docs/SonarQube.md) - Code quality
+- [Black Duck Detect](docs/BlackDuck.md) - SCA vulnerability and license scanning
 - [Maven](docs/Maven.md) - Build automation
 - [Grafana, Loki & Prometheus](docs/Grafana-Loki.md) - Monitoring and logging
 - [Kyverno](k8s/kyverno/README.md) - Policy engine and compliance
@@ -589,7 +592,7 @@ CI.CD/
 
 After completing this lab, you will be able to:
 - Build and containerize applications with Docker (multi-stage builds)
-- Create automated CI/CD pipelines with Jenkins (11+ stages)
+- Create automated CI/CD pipelines with Jenkins (12+ stages)
 - Deploy full-stack applications to Kubernetes using GitOps (ArgoCD)
 - **Design three-tier architectures** (Database + Backend + Frontend)
 - **Implement database persistence** with PostgreSQL and StatefulSets
@@ -597,6 +600,7 @@ After completing this lab, you will be able to:
 - **Create modern frontends** with React, TypeScript, and Vite
 - Manage container images with Harbor registry and robot accounts
 - Implement code quality gates with SonarQube
+- Scan open-source dependencies for vulnerabilities and license issues with Black Duck Detect (SCA)
 - Monitor applications with Prometheus metrics and Actuator endpoints
 - Aggregate and query logs with Loki
 - Visualize data with Grafana dashboards
@@ -664,6 +668,7 @@ Complete reference to all documentation files in this repository:
 - [Kind (K8s in Docker)](docs/Kind-K8s.md) - Local Kubernetes cluster setup
 - [Maven](docs/Maven.md) - Build automation and dependency management
 - [SonarQube](docs/SonarQube.md) - Code quality and security analysis
+- [Black Duck Detect](docs/BlackDuck.md) - SCA vulnerability and license scanning
 - [Kyverno](k8s/kyverno/README.md) - Policy engine and compliance
 
 ### Quick Reference Guides
