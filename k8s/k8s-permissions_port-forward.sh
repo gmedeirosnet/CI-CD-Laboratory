@@ -86,8 +86,6 @@
 # LAST UPDATED: 2026-03-09
 # ==============================================================================
 
-set -e
-
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -279,11 +277,13 @@ start_all() {
         for name in ${(k)PORT_FORWARDS}; do
             local config=${PORT_FORWARDS[$name]}
             IFS=':' read -r namespace service local_port remote_port <<< "$config"
-            echo "  - $name: http://localhost:$local_port"
+            local scheme="http"
+            [[ "$remote_port" == "443" ]] && scheme="https"
+            echo "  - $name: ${scheme}://localhost:$local_port"
         done
         echo ""
-        echo "To stop: $0 stop"
-        echo "To check status: $0 status"
+        echo "To stop: ${0:A} stop"
+        echo "To check status: ${0:A} status"
     fi
 }
 
@@ -317,7 +317,7 @@ cleanup() {
     echo -e "${BLUE}Cleaning up orphaned port forward processes...${NC}"
 
     # Find kubectl port-forward processes
-    local pids=$(pgrep -f "kubectl port-forward")
+    local pids=$(pgrep -f "kubectl port-forward" || true)
 
     if [ -z "$pids" ]; then
         echo -e "${GREEN}✓ No orphaned processes found${NC}"

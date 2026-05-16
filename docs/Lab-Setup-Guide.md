@@ -1,7 +1,7 @@
 # Complete CI/CD Pipeline Lab Setup
 
 ## Overview
-This guide provides step-by-step instructions to set up a complete DevOps CI/CD laboratory environment using the following tools: ArgoCD, Kind (K8s in Docker), Docker, GitHub, Harbor, Helm Charts, Maven, Jenkins, SonarQube, Grafana, and Loki.
+This guide provides step-by-step instructions to set up a complete DevOps CI/CD laboratory environment using the following tools: ArgoCD, Kind (K8s in Docker), Docker, GitHub, Harbor, Helm Charts, Maven, Jenkins, SonarQube, Black Duck Detect, Grafana, and Loki.
 
 ## Prerequisites
 - macOS (M1 recommended), Linux, or Windows with WSL2
@@ -23,7 +23,7 @@ This guide provides step-by-step instructions to set up a complete DevOps CI/CD 
 ```
 Developer → GitHub → Jenkins → Maven Build → SonarQube Analysis
                           ↓
-                     Docker Build → Harbor Registry
+                     Docker Build → BlackDuck Detect (SCA) → Harbor Registry
                           ↓
                      Helm Package → ArgoCD → Kind K8s Cluster
                                                     ↓
@@ -130,8 +130,8 @@ cat > pom.xml << 'EOF'
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -163,13 +163,13 @@ EOF
 
 # Create Dockerfile
 cat > Dockerfile << 'EOF'
-FROM maven:3.9-openjdk-11 AS builder
+FROM maven:3.9-eclipse-temurin-25 AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
@@ -1003,6 +1003,73 @@ cd k8s/grafana && docker-compose restart
 
 **For detailed documentation, see:** [Grafana-Loki.md](Grafana-Loki.md)
 
+## Phase 5.5: Black Duck Detect (SCA) Setup
+
+### 5.5.1 Overview
+
+Black Duck Detect runs as a one-shot Docker container inside the Jenkins pipeline to perform Software Composition Analysis (SCA). It scans the project's dependency manifests (`pom.xml`, `frontend/package.json`) and the built JAR for known vulnerabilities (CVEs) and license information.
+
+**Key characteristics:**
+- No persistent Hub server required — runs in offline/audit mode by default
+- The Jenkins stage never fails the build (audit mode)
+- Reports are archived as Jenkins build artifacts under `blackduck-reports/`
+- Optionally connects to a Black Duck Hub server if `BLACKDUCK_URL` is configured
+
+### 5.5.2 Pipeline Integration
+
+Black Duck Detect is already integrated in the `Jenkinsfile` as stage 7 (`BlackDuck Detect Scan`), positioned between `Build Docker Image` and `Push to Harbor`. No additional Jenkins configuration is required for offline mode.
+
+### 5.5.3 Environment Variables (Optional)
+
+Add any of these to your `.env` file to customize behaviour:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `BLACKDUCK_DETECT_VERSION` | `latest` | Pin the Detect image version |
+| `BLACKDUCK_PROJECT_NAME` | `cicd-demo` | Project name in Hub (if connected) |
+| `BLACKDUCK_PROJECT_VERSION` | `${BUILD_NUMBER}` | Version tag per build |
+| `BLACKDUCK_URL` | _(unset)_ | Hub server URL — omit for offline mode |
+| `BLACKDUCK_API_TOKEN` | _(unset)_ | Hub API token — omit for offline mode |
+
+### 5.5.4 Optional: Connect to a Black Duck Hub Server
+
+If you have access to a Black Duck Hub server, add two Secret Text credentials in Jenkins:
+
+1. Go to **Manage Jenkins** → **Credentials** → **System** → **Global credentials**
+2. Add credential:
+   - **Kind:** Secret text
+   - **Secret:** Your Hub server URL (e.g., `https://hub.example.com`)
+   - **ID:** `blackduck-url`
+3. Add another credential:
+   - **Kind:** Secret text
+   - **Secret:** Your Hub API token
+   - **ID:** `blackduck-api-token`
+
+### 5.5.5 Run Detect Manually (Outside Jenkins)
+
+Use the standalone Docker Compose file for local scans:
+
+```bash
+# From the project root
+cd docker/blackduck
+
+# Run a scan (uses offline mode by default)
+docker compose run --rm blackduck-detect
+
+# Reports are written to docker/blackduck/blackduck-reports/
+ls blackduck-reports/
+```
+
+### 5.5.6 Reading Reports
+
+After a Jenkins build, find reports under the **Build Artifacts** section:
+- `blackduck-reports/detect-output.txt` — full console log from Detect
+- `blackduck-reports/risk-report.json` — structured findings (CVEs, licenses)
+
+**For detailed documentation, see:** [BlackDuck.md](BlackDuck.md)
+
+---
+
 ## Phase 6: Kyverno Policy Engine Setup
 
 ### 6.1 Overview
@@ -1544,6 +1611,8 @@ helm package cicd-demo
    - **Harbor**: username + password (ID: `harbor-credentials`) - See Section 2.3
    - **SonarQube**: secret text (token) (ID: `sonarqube-token`) - See Section 2.2
    - **Kubeconfig**: secret file (optional, if using external cluster)
+   - **BlackDuck URL**: secret text (ID: `blackduck-url`) — optional, only if connecting to a Hub server
+   - **BlackDuck API Token**: secret text (ID: `blackduck-api-token`) — optional, only if connecting to a Hub server
 
 ### 8.2 Create Jenkinsfile
 ```groovy
@@ -1963,7 +2032,10 @@ docker exec -it app-demo-control-plane bash
    - View logs: http://localhost:3000
    - Query with LogQL
    - Create dashboards for log analysis
-2. Add metrics monitoring with Prometheus
+2. ✅ **SCA scanning with Black Duck Detect** - Already integrated in the pipeline!
+   - Reports archived as Jenkins build artifacts
+   - See `docs/BlackDuck.md` for Hub connection and strict mode options
+3. Add metrics monitoring with Prometheus
 3. Create Grafana dashboards for application metrics
     - K8S Dashboard: ID 15661
     - Loki Logging Dashboard: ID 23789
@@ -1979,6 +2051,7 @@ docker exec -it app-demo-control-plane bash
 ## References
 - Complete lab documentation in docs/
 - [Grafana & Loki Setup](Grafana-Loki.md) - Comprehensive logging guide
+- [Black Duck Detect](BlackDuck.md) - SCA vulnerability and license scanning guide
 - [Port Reference](Port-Reference.md) - All service ports and endpoints
 - Tool-specific guides for each component
 - Kind documentation: https://kind.sigs.k8s.io/
