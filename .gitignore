@@ -316,3 +316,6 @@ config.local.yml
 
 # Allow Helm chart archives in specific locations if needed
 # !helm-charts/**/*.tgz
+
+## Add other
+.superpowers
