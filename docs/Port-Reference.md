@@ -22,6 +22,8 @@ This document provides a comprehensive reference for all network ports used in t
 | **Prometheus** | 9090 | 30090 | HTTP | http://localhost:30090 | Metrics & monitoring |
 | **SonarQube** | 9000 | 9000 | HTTP | http://localhost:9000 | Code quality analysis |
 
+**Black Duck Detect**: Runs as a one-shot Docker container with no persistent port. If a full Black Duck Hub server is added later, it would use port 8083.
+
 **Note on Port Mappings**:
 - **Internal Port**: Port the service listens on inside the container/pod
 - **External Port**: Port exposed on localhost for access from your machine

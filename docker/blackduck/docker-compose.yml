@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  blackduck-detect:
+    image: blackducksoftware/detect:${BLACKDUCK_DETECT_VERSION:-latest}
+    volumes:
+      - ../../:/workspace
+      - ./blackduck-reports:/workspace/blackduck-reports
+    environment:
+      DETECT_SOURCE_PATH: /workspace
+      DETECT_OUTPUT_PATH: /workspace/blackduck-reports
+      DETECT_PROJECT_NAME: ${BLACKDUCK_PROJECT_NAME:-cicd-demo}
+      DETECT_PROJECT_VERSION_NAME: ${BLACKDUCK_PROJECT_VERSION:-local}
+      BLACKDUCK_URL: ${BLACKDUCK_URL:-}
+      BLACKDUCK_API_TOKEN: ${BLACKDUCK_API_TOKEN:-}
+    restart: 'no'

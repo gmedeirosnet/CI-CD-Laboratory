@@ -58,6 +58,7 @@ Comprehensive documentation for each DevOps tool in the laboratory.
 | [SonarQube Setup](SonarQube-Setup.md) | Detailed installation instructions |
 | [SonarQube Quick Reference](SonarQube-QuickRef.md) | Common SonarQube operations |
 | [Jenkins-Kyverno Setup](Jenkins-Kyverno-Setup.md) | Policy enforcement with Jenkins |
+| [BlackDuck Detect](BlackDuck.md) | SCA vulnerability and license scanning with Black Duck Detect |
 
 ### Build & Dependency Management
 

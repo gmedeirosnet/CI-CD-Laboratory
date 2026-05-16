@@ -17,6 +17,10 @@ pipeline {
 
         // Kind Cluster - For Mac Docker Desktop image loading
         KIND_CLUSTER_NAME = "${env.KIND_CLUSTER_NAME ?: 'app-demo'}"
+
+        // BlackDuck Detect - SCA scanning
+        BLACKDUCK_DETECT_VERSION = "${env.BLACKDUCK_DETECT_VERSION ?: 'latest'}"
+        BLACKDUCK_PROJECT_NAME = "${env.BLACKDUCK_PROJECT_NAME ?: 'cicd-demo'}"
     }
 
     stages {
@@ -176,6 +180,38 @@ pipeline {
                         docker tag ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${IMAGE_TAG} \
                                    ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:latest
                     """
+                }
+            }
+        }
+
+        stage('BlackDuck Detect Scan') {
+            steps {
+                script {
+                    sh '''
+                        mkdir -p blackduck-reports
+
+                        docker run --rm \
+                            -v "${WORKSPACE}:/workspace" \
+                            -e DETECT_SOURCE_PATH=/workspace \
+                            -e DETECT_OUTPUT_PATH=/workspace/blackduck-reports \
+                            -e "DETECT_PROJECT_NAME=${BLACKDUCK_PROJECT_NAME:-cicd-demo}" \
+                            -e "DETECT_PROJECT_VERSION_NAME=${BUILD_NUMBER}" \
+                            ${BLACKDUCK_URL:+-e BLACKDUCK_URL=${BLACKDUCK_URL}} \
+                            ${BLACKDUCK_API_TOKEN:+-e BLACKDUCK_API_TOKEN=${BLACKDUCK_API_TOKEN}} \
+                            blackducksoftware/detect:${BLACKDUCK_DETECT_VERSION:-latest}
+                        DETECT_EXIT=$?
+                        if [ $DETECT_EXIT -ne 0 ]; then
+                            echo "WARNING: BlackDuck Detect exited with code ${DETECT_EXIT} (audit mode - build continues)"
+                        else
+                            echo "BlackDuck Detect scan complete. Reports in blackduck-reports/"
+                        fi
+                        exit 0
+                    '''
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'blackduck-reports/**', allowEmptyArchive: true
                 }
             }
         }

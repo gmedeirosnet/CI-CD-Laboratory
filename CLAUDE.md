@@ -123,7 +123,7 @@ kind create cluster --config kind-config.yaml
 
 ```
 GitHub → Jenkins → Maven build → SonarQube quality gate
-                              → Docker build → Harbor registry
+                              → Docker build → BlackDuck Detect (SCA) → Harbor registry
                               → Kind image load → Helm package → ArgoCD → Kind K8s
                                                                     ↓
                                                            Kyverno policy validation
