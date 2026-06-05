@@ -10,7 +10,6 @@ This guide provides solutions to common issues encountered while setting up and 
 - [Kind Kubernetes Issues](#kind-kubernetes-issues)
 - [Maven Build Problems](#maven-build-problems)
 - [SonarQube Issues](#sonarqube-issues)
-- [ArgoCD Problems](#argocd-problems)
 - [Helm Chart Issues](#helm-chart-issues)
 - [Ansible Problems](#ansible-problems)
 - [Network and Connectivity](#network-and-connectivity)
@@ -707,72 +706,6 @@ docker exec jenkins curl -I http://sonarqube:9000
 
 ---
 
-## ArgoCD Problems
-
-### Cannot Access ArgoCD UI
-
-**Symptom**: Connection refused on port 8080
-
-**Solutions**:
-```bash
-# 1. Check ArgoCD pods
-kubectl get pods -n argocd
-
-# 2. Port forward ArgoCD server
-kubectl port-forward svc/argocd-server -n argocd 8080:443
-
-# 3. Get admin password
-kubectl -n argocd get secret argocd-initial-admin-secret \
-  -o jsonpath="{.data.password}" | base64 -d
-
-# 4. Check service
-kubectl get svc -n argocd
-```
-
-### Application Sync Fails
-
-**Symptom**: ArgoCD shows "OutOfSync" or sync errors
-
-**Solutions**:
-```bash
-# 1. Check application status
-kubectl get applications -n argocd
-
-# 2. Describe application
-kubectl describe application <app-name> -n argocd
-
-# 3. Check ArgoCD logs
-kubectl logs -n argocd deployment/argocd-application-controller
-
-# 4. Manually sync
-argocd app sync <app-name>
-
-# 5. Hard refresh
-argocd app sync <app-name> --force
-```
-
-### Git Repository Connection Issues
-
-**Symptom**: Cannot connect to GitHub repository
-
-**Solutions**:
-```bash
-# 1. Add repository credentials
-argocd repo add https://github.com/user/repo \
-  --username <user> --password <token>
-
-# 2. Verify repository
-argocd repo list
-
-# 3. Test connection
-argocd repo get https://github.com/user/repo
-
-# 4. Use HTTPS instead of SSH
-# Or add SSH key to ArgoCD
-```
-
----
-
 ## Helm Chart Issues
 
 ### Helm Install Fails
@@ -1119,12 +1052,11 @@ Is your Jenkins pipeline failing?
 │      │      ├─YES→ Check Harbor robot account credentials
 │      │      └─NO→ Check Harbor project exists, registry is insecure-registry
 │      │
-│      └─ ArgoCD Sync
-│         └─> Sync failed?
-│             ├─ Check ArgoCD application status
-│             ├─ Verify Git repository accessible
-│             ├─ Check Helm chart syntax
-│             └─ Review ArgoCD logs
+│      └─ Helm Deploy
+│         └─> Deploy failed?
+│             ├─ Check Helm chart syntax: `helm lint helm-charts/cicd-demo`
+│             ├─ Check namespace exists: `kubectl get ns app-demo`
+│             └─ Review kubectl events: `kubectl get events -n app-demo`
 ```
 
 ### Decision Tree 4: Database Connection Issues
@@ -1556,7 +1488,6 @@ kubectl logs -n app-demo -l app=cicd-demo-backend | grep ERROR
    - [Kubernetes docs](https://kubernetes.io/docs/)
    - [Docker docs](https://docs.docker.com/)
    - [Jenkins docs](https://www.jenkins.io/doc/)
-   - [ArgoCD docs](https://argo-cd.readthedocs.io/)
    - [Harbor docs](https://goharbor.io/docs/)
 
 3. **Community**:

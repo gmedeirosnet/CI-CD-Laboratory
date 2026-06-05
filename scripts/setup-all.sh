@@ -117,7 +117,6 @@ echo "- Kind Kubernetes cluster"
 echo "- Jenkins CI/CD server"
 echo "- Harbor container registry"
 echo "- SonarQube code analysis"
-echo "- ArgoCD GitOps deployment"
 echo "- PostgreSQL database (deployed separately)"
 echo "- Grafana visualization platform"
 echo "- Loki log aggregation system"
@@ -496,80 +495,10 @@ fi
 echo ""
 
 ################################################################################
-# Step 7: Setup ArgoCD
+# Step 7: Configure Harbor-Kind Integration
 ################################################################################
 
-print_header "Step 7: Setting up ArgoCD"
-
-# Check if ArgoCD namespace exists
-if kubectl get namespace argocd &> /dev/null; then
-    print_info "ArgoCD namespace already exists"
-    ARGOCD_INSTALLED=true
-else
-    print_info "Creating ArgoCD namespace..."
-    if ! kubectl create namespace argocd; then
-        print_error "Failed to create ArgoCD namespace"
-        exit 1
-    fi
-
-    print_info "Installing ArgoCD..."
-    if ! kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml; then
-        print_error "Failed to install ArgoCD"
-        exit 1
-    fi
-    print_success "ArgoCD manifests applied"
-    ARGOCD_INSTALLED=true
-fi
-
-# Wait for ArgoCD pods
-if [ "$ARGOCD_INSTALLED" = true ]; then
-    print_info "Waiting for ArgoCD pods to be ready..."
-    sleep 10  # Give pods time to start
-
-    if kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s 2>/dev/null; then
-        print_success "ArgoCD pods are ready"
-    else
-        print_warning "ArgoCD pods are still starting. Checking status..."
-        kubectl get pods -n argocd
-    fi
-
-    # Verify critical pods
-    ARGOCD_PODS=$(kubectl get pods -n argocd --no-headers 2>/dev/null | wc -l | tr -d ' ')
-    if [ "$ARGOCD_PODS" -eq 0 ]; then
-        print_error "No ArgoCD pods found"
-        exit 1
-    fi
-    print_success "ArgoCD has $ARGOCD_PODS pod(s) running"
-
-    # Get ArgoCD admin password
-    print_info "Retrieving ArgoCD admin password..."
-    RETRY_COUNT=0
-    while [ $RETRY_COUNT -lt 30 ]; do
-        ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" 2>/dev/null | base64 -d 2>/dev/null)
-        if [ -n "$ARGOCD_PASSWORD" ]; then
-            print_success "ArgoCD admin password: $ARGOCD_PASSWORD"
-            update_env_file "ARGOCD_ADMIN_PASSWORD" "$ARGOCD_PASSWORD"
-            break
-        fi
-        sleep 2
-        RETRY_COUNT=$((RETRY_COUNT + 1))
-    done
-
-    if [ -z "$ARGOCD_PASSWORD" ]; then
-        print_warning "Could not retrieve ArgoCD password automatically"
-        print_info "Run: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
-    fi
-fi
-
-print_info "To access ArgoCD, run: kubectl port-forward svc/argocd-server -n argocd 8080:443"
-
-echo ""
-
-################################################################################
-# Step 7.5: Configure Harbor-Kind Integration
-################################################################################
-
-print_header "Step 7.5: Configuring Harbor-Kind Integration"
+print_header "Step 7: Configuring Harbor-Kind Integration"
 
 if [ -f "$SCRIPT_DIR/configure-kind-harbor-access.sh" ]; then
     print_info "Configuring Kind cluster to access Harbor registry..."
@@ -583,10 +512,10 @@ fi
 echo ""
 
 ################################################################################
-# Step 7.6: Setup Grafana, Loki & Prometheus (Observability Stack)
+# Step 8: Setup Grafana, Loki & Prometheus (Observability Stack)
 ################################################################################
 
-print_header "Step 7.6: Setting up Observability Stack"
+print_header "Step 8: Setting up Observability Stack"
 
 # Setup Loki (Log Aggregation)
 if [ -f "$PROJECT_ROOT/k8s/grafana/setup-loki.sh" ]; then
@@ -628,14 +557,13 @@ fi
 
 # Setup Port Forwarding for Monitoring Services
 if [ -f "$PROJECT_ROOT/k8s/k8s-permissions_port-forward.sh" ]; then
-    print_info "Starting port forwarding for Loki, Prometheus, and ArgoCD..."
+    print_info "Starting port forwarding for Loki and Prometheus..."
     cd "$PROJECT_ROOT"
     chmod +x k8s/k8s-permissions_port-forward.sh
     ./k8s/k8s-permissions_port-forward.sh start
     print_success "Port forwarding enabled:"
     print_info "  - Loki:       http://localhost:31000"
     print_info "  - Prometheus: http://localhost:30090"
-    print_info "  - ArgoCD:     https://localhost:8090"
 else
     print_warning "Port forwarding script not found at k8s/k8s-permissions_port-forward.sh"
     print_info "Manual port forwarding may be required"
@@ -644,10 +572,10 @@ fi
 echo ""
 
 ################################################################################
-# Step 7.7: Verify Black Duck Detect Image
+# Step 9: Verify Black Duck Detect Image
 ################################################################################
 
-print_header "Step 7.7: Verifying Black Duck Detect"
+print_header "Step 9: Verifying Black Duck Detect"
 
 BLACKDUCK_DETECT_VERSION="${BLACKDUCK_DETECT_VERSION:-latest}"
 print_info "Pulling blackducksoftware/detect:${BLACKDUCK_DETECT_VERSION} (used in pipeline SCA stage)..."
@@ -660,10 +588,10 @@ fi
 echo ""
 
 ################################################################################
-# Step 8: Build Demo Application
+# Step 10: Build Demo Application
 ################################################################################
 
-print_header "Step 8: Building Demo Application"
+print_header "Step 10: Building Demo Application"
 
 cd "$PROJECT_ROOT"
 
@@ -683,10 +611,10 @@ fi
 echo ""
 
 ################################################################################
-# Step 9: Setup Kyverno Policy Engine
+# Step 11: Setup Kyverno Policy Engine
 ################################################################################
 
-print_header "Step 9: Setting up Kyverno Policy Engine"
+print_header "Step 11: Setting up Kyverno Policy Engine"
 
 # Check if Kyverno is already installed
 if kubectl get namespace kyverno &> /dev/null && helm list -n kyverno 2>/dev/null | grep -q "^kyverno"; then
@@ -732,75 +660,25 @@ else
     KYVERNO_INSTALLED=false
 fi
 
-# Deploy policies via ArgoCD GitOps (always attempt if Kyverno is installed)
+# Deploy policies directly via kubectl
 if [ "$KYVERNO_INSTALLED" = true ]; then
-    print_info "Deploying Kyverno policies via ArgoCD..."
-    if kubectl get namespace argocd &> /dev/null; then
-        # Check if Application already exists
-        if kubectl get application kyverno-policies -n argocd &> /dev/null; then
-            print_info "Kyverno policies Application already exists"
+    print_info "Deploying Kyverno policies via kubectl..."
+    if kubectl apply -f "$PROJECT_ROOT/k8s/kyverno/policies/" -R; then
+        print_success "Kyverno policies deployed"
 
-            # Check sync status
-            SYNC_STATUS=$(kubectl get application kyverno-policies -n argocd -o jsonpath='{.status.sync.status}' 2>/dev/null)
-            print_info "Current sync status: $SYNC_STATUS"
+        sleep 3
 
-            # Verify policies deployed
-            POLICY_COUNT=$(kubectl get clusterpolicies --no-headers 2>/dev/null | wc -l | tr -d ' ')
-            if [ "$POLICY_COUNT" -gt 0 ]; then
-                print_success "Kyverno policies are deployed ($POLICY_COUNT policies)"
-            else
-                print_warning "No cluster policies found - ArgoCD may still be syncing"
-            fi
-        elif [ -f "$PROJECT_ROOT/argocd-apps/kyverno-policies.yaml" ]; then
-            # Create new Application
-            if ! kubectl apply -f "$PROJECT_ROOT/argocd-apps/kyverno-policies.yaml"; then
-                print_error "Failed to create Kyverno policies ArgoCD Application"
-            else
-                print_success "Kyverno policies ArgoCD Application created"
-
-                # Wait for initial sync
-                print_info "Waiting for ArgoCD to sync policies..."
-                sleep 5
-
-                # Check sync status
-                if command -v argocd &> /dev/null; then
-                    argocd app sync kyverno-policies --timeout 60 2>/dev/null || true
-                    argocd app wait kyverno-policies --timeout 60 2>/dev/null || print_warning "ArgoCD sync in progress"
-                fi
-
-                # Verify policies deployed
-                POLICY_COUNT=$(kubectl get clusterpolicies --no-headers 2>/dev/null | wc -l | tr -d ' ')
-                if [ "$POLICY_COUNT" -gt 0 ]; then
-                    print_success "Kyverno policies deployed via GitOps ($POLICY_COUNT policies)"
-                else
-                    print_warning "No cluster policies found yet - may need more time to sync"
-                fi
-
-                print_info "Policies are in Audit mode - violations logged but not blocked"
-                print_info "View policies: kubectl get clusterpolicies"
-                print_info "View in ArgoCD UI: https://localhost:8090/applications/kyverno-policies"
-            fi
+        POLICY_COUNT=$(kubectl get clusterpolicies --no-headers 2>/dev/null | wc -l | tr -d ' ')
+        if [ "$POLICY_COUNT" -gt 0 ]; then
+            print_success "$POLICY_COUNT cluster policies are active"
         else
-            print_warning "kyverno-policies.yaml not found at $PROJECT_ROOT/argocd-apps/"
+            print_warning "Policies applied but not yet visible"
         fi
+
+        print_info "Policies are in Audit mode - violations logged but not blocked"
+        print_info "View policies: kubectl get clusterpolicies"
     else
-        print_warning "ArgoCD not found. Deploying policies directly via kubectl..."
-        if kubectl apply -f "$PROJECT_ROOT/k8s/kyverno/policies/" -R; then
-            print_success "Kyverno policies deployed"
-
-            # Wait a moment for policies to be processed
-            sleep 3
-
-            # Verify policies deployed
-            POLICY_COUNT=$(kubectl get clusterpolicies --no-headers 2>/dev/null | wc -l | tr -d ' ')
-            if [ "$POLICY_COUNT" -gt 0 ]; then
-                print_success "$POLICY_COUNT cluster policies are active"
-            else
-                print_warning "Policies applied but not yet visible"
-            fi
-        else
-            print_error "Failed to deploy Kyverno policies"
-        fi
+        print_error "Failed to deploy Kyverno policies"
     fi
 else
     print_warning "Kyverno is not installed - skipping policy deployment"
@@ -809,10 +687,10 @@ fi
 echo ""
 
 ################################################################################
-# Step 10: Setup Policy Reporter (Kyverno Observability)
+# Step 12: Setup Policy Reporter (Kyverno Observability)
 ################################################################################
 
-print_header "Step 10: Setting up Policy Reporter"
+print_header "Step 12: Setting up Policy Reporter"
 
 # Check if Kyverno is installed before installing Policy Reporter
 if [ "$KYVERNO_INSTALLED" = true ]; then
@@ -894,7 +772,7 @@ done
 
 # Check Kubernetes namespaces
 K8S_NAMESPACES=0
-for ns in argocd kyverno logging monitoring; do
+for ns in kyverno logging monitoring; do
     if kubectl get namespace "$ns" &> /dev/null; then
         ((K8S_NAMESPACES++))
     fi
@@ -908,7 +786,7 @@ fi
 
 echo "Validation Results:"
 echo "  - Docker Services:    $DOCKER_SERVICES/4 running"
-echo "  - K8s Namespaces:     $K8S_NAMESPACES/4 created"
+echo "  - K8s Namespaces:     $K8S_NAMESPACES/3 created"
 echo "  - Kind Cluster:       $CLUSTER_STATUS"
 echo ""
 
@@ -926,7 +804,6 @@ echo "  - SonarQube:       http://localhost:9000"
 echo "  - Grafana:         http://localhost:3000"
 echo "  - Loki:            http://localhost:31000"
 echo "  - Prometheus:      http://localhost:30090"
-echo "  - ArgoCD:          https://localhost:8090"
 echo "  - Policy Reporter: http://localhost:31002 (UI) | http://localhost:31001 (API)"
 echo "  - BlackDuck:       Reports in Jenkins build artifacts (blackduck-reports/)"
 echo ""
@@ -935,14 +812,12 @@ echo "  - Jenkins:   admin / $JENKINS_PASSWORD"
 echo "  - Harbor:    admin / Harbor12345"
 echo "  - SonarQube: admin / admin (change on first login)"
 echo "  - Grafana:   admin / admin (change on first login)"
-echo "  - ArgoCD:    admin / $ARGOCD_PASSWORD"
 echo ""
 echo "Kubernetes Components:"
 echo "  - Kind cluster running (kubectl context: kind-kind)"
 echo "  - Kyverno policy engine (namespace: kyverno)"
 echo "  - Loki log aggregation (namespace: logging)"
 echo "  - Prometheus metrics (namespace: monitoring)"
-echo "  - ArgoCD GitOps (namespace: argocd)"
 echo ""
 echo "Docker Desktop Services:"
 echo "  - Grafana visualization platform"
@@ -960,10 +835,7 @@ echo "   ./scripts/test-integration.sh      # 40+ end-to-end integration tests"
 echo "   ./scripts/test-performance.sh      # Performance benchmarks and load tests"
 echo "   ./scripts/test-db-pool.sh          # Database connection pool tests"
 echo ""
-echo -e "${BLUE}3. Get ArgoCD Admin Password${NC}"
-echo "   kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d && echo"
-echo ""
-echo -e "${BLUE}4. Configure Harbor Registry${NC}"
+echo -e "${BLUE}3. Configure Harbor Registry${NC}"
 echo "   - Create project 'cicd-demo' via UI: http://localhost:8082"
 echo "   - Or run: cd scripts && ./create-harbor-robot.sh"
 echo "   - This creates the project and robot account for CI/CD"
@@ -984,7 +856,6 @@ echo -e "${BLUE}7. Configure CI/CD Pipelines${NC}"
 echo "   - Jenkins:    Configure GitHub credentials and webhooks"
 echo "   - SonarQube:  Create project 'cicd-demo' and generate token"
 echo "   - Harbor:     Create robot account for image push/pull"
-echo "   - ArgoCD:     Connect Git repository for GitOps deployments"
 echo ""
 echo -e "${BLUE}8. View Black Duck Detect SCA Reports${NC}"
 echo "   - Reports archived as Jenkins build artifacts after each build"

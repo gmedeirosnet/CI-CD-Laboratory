@@ -105,11 +105,10 @@ kind create cluster --config kind-config.yaml
 | Grafana         | 3000  | http://localhost:3000            |
 | Prometheus      | 30090 | http://localhost:30090           |
 | Loki            | 31000 | http://localhost:31000           |
-| ArgoCD          | 8090  | https://localhost:8090 (HTTPS)   |
 | Policy Reporter | 31002 | http://localhost:31002 (UI)      |
 | Policy Reporter | 31001 | http://localhost:31001 (API)     |
 
-**Important**: ArgoCD uses port 8090 (not 8080) to avoid conflict with Jenkins. SonarQube uses port 9000.
+**Important**: SonarQube uses port 9000.
 
 ## Architecture
 
@@ -124,7 +123,7 @@ kind create cluster --config kind-config.yaml
 ```
 GitHub → Jenkins → Maven build → SonarQube quality gate
                               → Docker build → BlackDuck Detect (SCA) → Harbor registry
-                              → Kind image load → Helm package → ArgoCD → Kind K8s
+                              → Kind image load → Helm package → Kind K8s
                                                                     ↓
                                                            Kyverno policy validation
                                                                     ↓
@@ -133,12 +132,11 @@ GitHub → Jenkins → Maven build → SonarQube quality gate
 
 ### Key Configuration Files
 
-- [Jenkinsfile](Jenkinsfile) — 11-stage declarative pipeline (build, test, quality gate, Docker, Harbor, Kind, Helm, ArgoCD, monitoring)
+- [Jenkinsfile](Jenkinsfile) — declarative pipeline (build, test, quality gate, Docker, Harbor, Kind, Helm, Kyverno, monitoring)
 - [Jenkinsfile-kyverno-policies](Jenkinsfile-kyverno-policies) — Pipeline for Kyverno policy deployment
 - [helm-charts/cicd-demo/values.yaml](helm-charts/cicd-demo/values.yaml) — Helm chart values for all three tiers
 - [kind-config.yaml](kind-config.yaml) — Kind cluster: 1 control-plane + 2 workers, named `app-demo`
 - [k8s/kyverno/policies/](k8s/kyverno/policies/) — 8+ Kyverno policies in Audit mode (namespace, security, resources, registry, labels)
-- [argocd-apps/cicd-demo.yaml](argocd-apps/cicd-demo.yaml) — ArgoCD GitOps application definition
 
 ### Kyverno Policy Layout
 
@@ -165,7 +163,6 @@ Copy `.env.template` to `.env` and fill in credentials. The `.env` file is gitig
 - `HARBOR_REGISTRY`, `HARBOR_PROJECT`, `HARBOR_ROBOT_NAME`, `HARBOR_ROBOT_SECRET`
 - `JENKINS_URL`, `JENKINS_PASSWORD`
 - `SONAR_HOST` (default: `http://localhost:9000`), `SONAR_TOKEN`
-- `ARGOCD_SERVER` (default: `localhost:8090`), `ARGOCD_ADMIN_PASSWORD`
 - `KIND_CLUSTER_NAME` (default: `app-demo`), `KUBE_NAMESPACE` (default: `app-demo`)
 
 ## Documentation Structure

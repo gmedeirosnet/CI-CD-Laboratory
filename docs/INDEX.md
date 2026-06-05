@@ -37,9 +37,6 @@ Comprehensive documentation for each DevOps tool in the laboratory.
 | Document | Description |
 |----------|-------------|
 | [Jenkins](Jenkins.md) | CI/CD automation server configuration and pipelines |
-| [ArgoCD](ArgoCD.md) | GitOps continuous delivery for Kubernetes |
-| [ArgoCD Quick Setup](ArgoCD-QuickStart.md) | Fast ArgoCD configuration guide |
-| [ArgoCD Repository Setup](ArgoCD_setup-argocd-repo.md) | Repository access configuration |
 
 ### Containerization & Orchestration
 
@@ -150,8 +147,7 @@ Choose your learning path based on your experience level:
 1. [Architecture Diagram](Architecture-Diagram.md) - Understand the pipeline
 2. [Kubernetes (Kind)](Kind-K8s.md) - Container orchestration
 3. [Helm Charts](Helm-Charts.md) - Package management
-4. [ArgoCD](ArgoCD.md) - GitOps deployment
-5. [Full-Stack Deployment](FULLSTACK-DEPLOYMENT.md) - Deploy applications
+4. [Full-Stack Deployment](FULLSTACK-DEPLOYMENT.md) - Deploy applications
 
 ### Advanced Path
 1. [Jenkins-Kyverno Setup](Jenkins-Kyverno-Setup.md) - Policy enforcement

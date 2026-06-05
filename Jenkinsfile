@@ -441,54 +441,6 @@ NSEOF
             }
         }
 
-        stage('Deploy with ArgoCD') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'argocd-credentials',
-                                                     usernameVariable: 'ARGOCD_USER',
-                                                     passwordVariable: 'ARGOCD_PASS')]) {
-                        sh """
-                            # Set ArgoCD server - use host.docker.internal to reach host from container
-                            export ARGOCD_SERVER='host.docker.internal:8090'
-
-                            # Login to ArgoCD
-                            argocd login \${ARGOCD_SERVER} \
-                                --username \${ARGOCD_USER} \
-                                --password \${ARGOCD_PASS} \
-                                --grpc-web \
-                                --insecure
-
-                            # Delete existing application if it exists to avoid conflicts
-                            argocd app delete cicd-demo --cascade --grpc-web --insecure --yes 2>/dev/null || true
-                            sleep 5
-
-                            # Create ArgoCD application with auto-sync enabled
-                            argocd app create cicd-demo \
-                                --repo https://github.com/gmedeirosnet/CI.CD.git \
-                                --revision ${GIT_BRANCH} \
-                                --path helm-charts/cicd-demo \
-                                --dest-server https://kubernetes.default.svc \
-                                --dest-namespace ${NAMESPACE} \
-                                --sync-policy automated \
-                                --auto-prune \
-                                --self-heal \
-                                --grpc-web \
-                                --insecure
-
-                            echo "⏳ Waiting for ArgoCD auto-sync to complete..."
-
-                            # Wait for auto-sync to complete (no manual sync needed)
-                            argocd app wait cicd-demo --health --timeout 300 --grpc-web --insecure || \
-                                echo "⚠ ArgoCD sync completed with warnings (expected for Kind LoadBalancer services)"
-
-                            # Show application status
-                            argocd app get cicd-demo --grpc-web --insecure
-                        """
-                    }
-                }
-            }
-        }
-
         stage('Deploy Kyverno Policies') {
             steps {
                 script {
@@ -500,7 +452,6 @@ NSEOF
 
                         # Kind cluster name
                         KIND_CLUSTER="\${KIND_CLUSTER_NAME:-app-demo}"
-                        ARGOCD_APP_NAME="kyverno-policies"
                         POLICIES_PATH="k8s/kyverno/policies"
 
                         # Check if Kind cluster exists
@@ -599,43 +550,13 @@ NSEOF
                         echo "✓ All policy files are valid"
                         echo ""
 
-                        # Check/Create ArgoCD Application for policies
-                        echo "=== ArgoCD Application Management ==="
-                        if docker exec \${KIND_CLUSTER}-control-plane kubectl get application \${ARGOCD_APP_NAME} -n argocd >/dev/null 2>&1; then
-                            echo "✓ ArgoCD Application '\${ARGOCD_APP_NAME}' exists"
-
-                            SYNC_STATUS=\$(docker exec \${KIND_CLUSTER}-control-plane kubectl get application \${ARGOCD_APP_NAME} -n argocd -o jsonpath='{.status.sync.status}')
-                            echo "  Current Sync Status: \${SYNC_STATUS}"
-                        else
-                            echo "Creating ArgoCD Application for Kyverno policies..."
-
-                            if [ -f "argocd-apps/kyverno-policies.yaml" ]; then
-                                docker exec -i \${KIND_CLUSTER}-control-plane kubectl apply -f - < argocd-apps/kyverno-policies.yaml
-                                echo "✓ ArgoCD Application created"
-                            else
-                                echo "WARNING: ArgoCD Application manifest not found"
-                                echo "Applying policies directly..."
-                                find \${POLICIES_PATH} -name "*.yaml" -exec cat {} \\; | docker exec -i \${KIND_CLUSTER}-control-plane kubectl apply -f -
-                                exit 0
-                            fi
-                        fi
-                        echo ""
-
-                        # Trigger ArgoCD sync
-                        echo "=== Syncing Policies via ArgoCD ==="
-                        echo "Triggering ArgoCD hard refresh..."
-                        docker exec \${KIND_CLUSTER}-control-plane kubectl patch application \${ARGOCD_APP_NAME} -n argocd \
-                            --type merge \
-                            -p '{"metadata":{"annotations":{"argocd.argoproj.io/refresh":"hard"}}}'
-
-                        echo "Waiting for sync to complete..."
-                        sleep 10
-
-                        SYNC_STATUS=\$(docker exec \${KIND_CLUSTER}-control-plane kubectl get application \${ARGOCD_APP_NAME} -n argocd -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "Unknown")
-                        HEALTH_STATUS=\$(docker exec \${KIND_CLUSTER}-control-plane kubectl get application \${ARGOCD_APP_NAME} -n argocd -o jsonpath='{.status.health.status}' 2>/dev/null || echo "Unknown")
-
-                        echo "  Sync Status: \${SYNC_STATUS}"
-                        echo "  Health Status: \${HEALTH_STATUS}"
+                        # Apply policies directly via kubectl
+                        echo "=== Applying Kyverno Policies ==="
+                        find \${POLICIES_PATH} -type f \\( -name "*.yaml" -o -name "*.yml" \\) | sort | while read policy_file; do
+                            echo "  Applying: \$policy_file"
+                            docker exec -i \${KIND_CLUSTER}-control-plane kubectl apply -f - < \$policy_file || exit 1
+                        done
+                        echo "✓ All policies applied"
                         echo ""
 
                         # Verify deployment
@@ -682,10 +603,8 @@ NSEOF
                         echo "  - Validated: \${POLICY_COUNT} policy files"
                         echo "  - Deployed: \${DEPLOYED_POLICY_COUNT} ClusterPolicies"
                         echo "  - Reports Generated: \$((NAMESPACE_REPORTS + CLUSTER_REPORTS))"
-                        echo "  - ArgoCD Sync: \${SYNC_STATUS}"
                         echo ""
                         echo "Access Points:"
-                        echo "  - ArgoCD: https://localhost:8090/applications/kyverno-policies"
                         echo "  - Policy Reporter: http://localhost:31002"
                         echo "  - Metrics: http://localhost:30090"
                         echo ""

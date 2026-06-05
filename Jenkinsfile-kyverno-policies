@@ -4,8 +4,6 @@ pipeline {
     environment {
         GITHUB_REPO = "${env.GITHUB_REPO ?: 'gmedeirosnet/CI.CD'}"
         GITHUB_BRANCH = "${env.GITHUB_BRANCH ?: 'main'}"
-        ARGOCD_NAMESPACE = 'argocd'
-        ARGOCD_APP_NAME = 'kyverno-policies'
         KYVERNO_NAMESPACE = 'kyverno'
         POLICIES_PATH = 'k8s/kyverno/policies'
     }
@@ -19,7 +17,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo "🔄 Checking out Kyverno policies from GitHub..."
+                echo "Checking out Kyverno policies from GitHub..."
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: "*/${GITHUB_BRANCH}"]],
@@ -33,37 +31,37 @@ pipeline {
 
         stage('Validate Policies') {
             steps {
-                echo "✅ Validating Kyverno policy files..."
+                echo "Validating Kyverno policy files..."
                 sh '''
                     # Check if policies directory exists
                     if [ ! -d "${POLICIES_PATH}" ]; then
-                        echo "❌ Policies directory not found: ${POLICIES_PATH}"
+                        echo "ERROR: Policies directory not found: ${POLICIES_PATH}"
                         exit 1
                     fi
 
                     # Count policy files
                     POLICY_COUNT=$(find ${POLICIES_PATH} -name "*.yaml" -o -name "*.yml" | wc -l)
-                    echo "📋 Found $POLICY_COUNT policy files"
+                    echo "Found $POLICY_COUNT policy files"
 
                     # Validate YAML syntax with kubectl dry-run
-                    echo "🔍 Validating YAML syntax..."
+                    echo "Validating YAML syntax..."
                     for file in $(find ${POLICIES_PATH} -name "*.yaml" -o -name "*.yml"); do
                         echo "Checking: $file"
                         kubectl apply --dry-run=client -f $file || exit 1
                     done
 
-                    echo "✅ All policy files are valid"
+                    echo "All policy files are valid"
                 '''
             }
         }
 
         stage('Check Kyverno Installation') {
             steps {
-                echo "🔍 Checking Kyverno installation..."
+                echo "Checking Kyverno installation..."
                 sh '''
                     # Check if Kyverno namespace exists
                     if ! kubectl get namespace ${KYVERNO_NAMESPACE} > /dev/null 2>&1; then
-                        echo "❌ Kyverno namespace not found"
+                        echo "ERROR: Kyverno namespace not found"
                         echo "Please install Kyverno first using: k8s/kyverno/install/setup-kyverno.sh"
                         exit 1
                     fi
@@ -71,12 +69,11 @@ pipeline {
                     # Check if Kyverno pods are running
                     RUNNING_PODS=$(kubectl get pods -n ${KYVERNO_NAMESPACE} --field-selector=status.phase=Running --no-headers | wc -l)
                     if [ "$RUNNING_PODS" -lt 3 ]; then
-                        echo "⚠️  Warning: Only $RUNNING_PODS Kyverno pods are running"
+                        echo "Warning: Only $RUNNING_PODS Kyverno pods are running"
                     else
-                        echo "✅ Kyverno is running with $RUNNING_PODS pods"
+                        echo "Kyverno is running with $RUNNING_PODS pods"
                     fi
 
-                    # Show Kyverno pods status
                     echo ""
                     echo "Kyverno Pods:"
                     kubectl get pods -n ${KYVERNO_NAMESPACE}
@@ -84,71 +81,28 @@ pipeline {
             }
         }
 
-        stage('Check/Create ArgoCD Application') {
+        stage('Apply Policies') {
             steps {
-                echo "🔍 Checking ArgoCD Application..."
+                echo "Applying Kyverno policies directly..."
                 sh '''
-                    # Check if ArgoCD Application exists
-                    if kubectl get application ${ARGOCD_APP_NAME} -n ${ARGOCD_NAMESPACE} > /dev/null 2>&1; then
-                        echo "✅ ArgoCD Application '${ARGOCD_APP_NAME}' exists"
-                        echo ""
-                        echo "Current Application Status:"
-                        kubectl get application ${ARGOCD_APP_NAME} -n ${ARGOCD_NAMESPACE} \
-                            -o jsonpath='{.status.sync.status}' && echo ""
-                    else
-                        echo "📝 Creating ArgoCD Application for Kyverno policies..."
-
-                        if [ -f "argocd-apps/kyverno-policies.yaml" ]; then
-                            kubectl apply -f argocd-apps/kyverno-policies.yaml
-                            echo "✅ ArgoCD Application created"
-                        else
-                            echo "❌ ArgoCD Application manifest not found at argocd-apps/kyverno-policies.yaml"
-                            exit 1
-                        fi
-                    fi
-                '''
-            }
-        }
-
-        stage('Sync with ArgoCD') {
-            steps {
-                echo "🔄 Syncing policies via ArgoCD..."
-                sh '''
-                    # Trigger ArgoCD refresh and sync via kubectl annotation
-                    echo "Triggering ArgoCD hard refresh..."
-                    kubectl patch application ${ARGOCD_APP_NAME} -n ${ARGOCD_NAMESPACE} \
-                        --type merge \
-                        -p '{"metadata":{"annotations":{"argocd.argoproj.io/refresh":"hard"}}}'
-
-                    echo "Waiting for ArgoCD to sync..."
-                    sleep 15
-
-                    # Check sync status
-                    SYNC_STATUS=$(kubectl get application ${ARGOCD_APP_NAME} -n ${ARGOCD_NAMESPACE} \
-                        -o jsonpath='{.status.sync.status}')
-                    HEALTH_STATUS=$(kubectl get application ${ARGOCD_APP_NAME} -n ${ARGOCD_NAMESPACE} \
-                        -o jsonpath='{.status.health.status}')
-
-                    echo ""
-                    echo "ArgoCD Sync Status: $SYNC_STATUS"
-                    echo "ArgoCD Health Status: $HEALTH_STATUS"
-
-                    if [ "$SYNC_STATUS" != "Synced" ]; then
-                        echo "⚠️  Warning: Application not fully synced yet"
-                    fi
+                    find ${POLICIES_PATH} -type f \( -name "*.yaml" -o -name "*.yml" \) | sort | while read policy_file; do
+                        echo "  Applying: $policy_file"
+                        kubectl apply -f "$policy_file" || exit 1
+                    done
+                    echo "All policies applied"
                 '''
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                echo "✅ Verifying policy deployment..."
+                echo "Verifying policy deployment..."
                 sh '''
-                    echo "📊 Current ClusterPolicies in cluster:"
+                    echo "Current ClusterPolicies in cluster:"
                     kubectl get clusterpolicies
 
                     echo ""
-                    echo "📋 Policy Details:"
+                    echo "Policy Details:"
                     kubectl get clusterpolicies -o custom-columns=\
 NAME:.metadata.name,\
 BACKGROUND:.spec.background,\
@@ -164,7 +118,7 @@ READY:.status.ready
 
         stage('Policy Reports Summary') {
             steps {
-                echo "📈 Generating policy reports summary..."
+                echo "Generating policy reports summary..."
                 sh '''
                     echo "Policy Report Statistics:"
                     echo "------------------------"
@@ -188,43 +142,23 @@ SKIP:.summary.skip 2>/dev/null || echo "No cluster reports yet"
             }
         }
 
-        stage('Test Policy Enforcement') {
-            steps {
-                echo "🧪 Testing policy enforcement..."
-                sh '''
-                    echo "Testing prevent-namespace-deletion policy..."
-
-                    # Test dry-run delete of protected namespace
-                    if kubectl delete namespace argocd --dry-run=client 2>&1 | grep -i "not allowed\\|blocked\\|denied"; then
-                        echo "✅ Namespace deletion policy is working correctly"
-                    else
-                        echo "⚠️  Warning: Namespace deletion test did not return expected block message"
-                        echo "This may be normal if the policy is in Audit mode"
-                    fi
-
-                    echo ""
-                    echo "🎯 Policy deployment and enforcement verification complete"
-                '''
-            }
-        }
-
         stage('Policy Reporter Status') {
             steps {
-                echo "📊 Checking Policy Reporter integration..."
+                echo "Checking Policy Reporter integration..."
                 sh '''
                     # Check if Policy Reporter is running
                     if docker ps 2>/dev/null | grep -q policy-reporter; then
-                        echo "✅ Policy Reporter containers are running"
+                        echo "Policy Reporter containers are running"
 
                         # Test API endpoint
                         if curl -sf http://localhost:31001/healthz > /dev/null 2>&1; then
-                            echo "✅ Policy Reporter API is accessible at http://localhost:31001"
-                            echo "✅ Policy Reporter UI is accessible at http://localhost:31002"
+                            echo "Policy Reporter API is accessible at http://localhost:31001"
+                            echo "Policy Reporter UI is accessible at http://localhost:31002"
                         else
-                            echo "⚠️  Policy Reporter API is not responding"
+                            echo "Warning: Policy Reporter API is not responding"
                         fi
                     else
-                        echo "ℹ️  Policy Reporter is not running (optional component)"
+                        echo "Policy Reporter is not running (optional component)"
                         echo "   To install: cd k8s/kyverno/policy-reporter && ./install-policy-reporter.sh"
                     fi
                 '''
@@ -235,39 +169,36 @@ SKIP:.summary.skip 2>/dev/null || echo "No cluster reports yet"
     post {
         success {
             echo """
-                ✅ Kyverno Policies Deployment Successful!
+                Kyverno Policies Deployment Successful!
 
-                📊 Summary:
-                - Policies validated and synced via ArgoCD
+                Summary:
+                - Policies validated and applied directly via kubectl
                 - All policies deployed to cluster
                 - Policy enforcement is active
 
-                🔗 Access Points:
-                - ArgoCD UI: https://localhost:8090
+                Access Points:
                 - Policy Reporter UI: http://localhost:31002
                 - Policy Reporter API: http://localhost:31001
 
-                📋 Next Steps:
+                Next Steps:
                 - Monitor policy violations in Policy Reporter
                 - Review policy reports: kubectl get policyreport -A
-                - Check ArgoCD for sync status
             """
         }
         failure {
             echo """
-                ❌ Kyverno Policies Deployment Failed
+                Kyverno Policies Deployment Failed
 
                 Please check:
                 1. Kyverno is installed: kubectl get pods -n kyverno
-                2. ArgoCD is running: kubectl get pods -n argocd
-                3. Policy files are valid: kubectl apply --dry-run=client -f k8s/kyverno/policies/
-                4. GitHub credentials are configured in Jenkins
+                2. Policy files are valid: kubectl apply --dry-run=client -f k8s/kyverno/policies/
+                3. GitHub credentials are configured in Jenkins
 
-                📝 Logs above contain detailed error information
+                Logs above contain detailed error information
             """
         }
         always {
-            echo "🏁 Pipeline execution completed"
+            echo "Pipeline execution completed"
             cleanWs()
         }
     }

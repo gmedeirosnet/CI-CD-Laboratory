@@ -25,7 +25,7 @@
 #
 # Exempted Namespaces:
 #   - kube-system, kube-public, kube-node-lease
-#   - kyverno, argocd, monitoring, logging
+#   - kyverno, monitoring, logging
 #
 # Exempted Pods (by label):
 #   - app: postgres (PostgreSQL uses official image)
@@ -100,7 +100,6 @@ spec:
           - kube-public
           - kube-node-lease
           - kyverno
-          - argocd
           - monitoring
           - logging
       - resources:

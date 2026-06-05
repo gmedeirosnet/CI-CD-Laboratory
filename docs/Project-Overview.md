@@ -15,7 +15,6 @@ JSON configuration files for AI-assisted learning and automation:
 
 ### Documentation Directory (`/docs`)
 Comprehensive guides for each tool:
-- `ArgoCD.md` - GitOps continuous delivery for Kubernetes
 - `Kind-K8s.md` - Local Kubernetes clusters using Docker (MacOS M4)
 - `Ansible.md` - Configuration management and automation
 - `Docker.md` - Container platform and best practices
@@ -31,7 +30,6 @@ Comprehensive guides for each tool:
 
 ### 1. Continuous Integration/Delivery
 - **Jenkins**: Industry-leading CI/CD automation server
-- **ArgoCD**: GitOps-based continuous delivery for Kubernetes
 
 ### 2. Version Control and Artifacts
 - **GitHub**: Source code management and collaboration
@@ -75,7 +73,6 @@ Comprehensive guides for each tool:
 
 ### Phase 4: Configuration and Deployment (2-3 weeks)
 - Ansible playbook development
-- ArgoCD GitOps workflows
 - Harbor registry management
 - Infrastructure as Code principles
 
@@ -108,12 +105,10 @@ Comprehensive guides for each tool:
        │
        ├─► Docker Build & Tag ──► Harbor Push (with Trivy Scan)
        │
-       ├─► Helm Package ──► Load to Kind
-       │
-       └─► ArgoCD Sync ──► Kyverno Policy Check ──► Kind K8s Deploy
-                                     │
-                                     ├─► Validate: Registry, Resources, Security
-                                     └─► Mutate: Add Labels, SecurityContext
+       ├─► Helm Package ──► Load to Kind ──► Kyverno Policy Check ──► Kind K8s Deploy
+       │                                               │
+       │                                               ├─► Validate: Registry, Resources, Security
+       │                                               └─► Mutate: Add Labels, SecurityContext
        │
        └─► Ansible Configure ────► Post-Deploy Tasks
                 │
@@ -133,7 +128,6 @@ Comprehensive guides for each tool:
 - Docker image creation and optimization
 - Secure image storage in Harbor
 - Helm chart packaging and versioning
-- GitOps deployment with ArgoCD
 - Configuration management with Ansible
 - Kubernetes orchestration on Kind (local clusters)
 
@@ -219,7 +213,6 @@ By completing this lab, you should be able to:
 - ✓ Manage container images with Harbor
 - ✓ Deploy applications to Kubernetes
 - ✓ Package applications with Helm
-- ✓ Implement GitOps with ArgoCD
 - ✓ Automate configuration with Ansible
 - ✓ Manage local Kubernetes clusters with Kind
 - ✓ Troubleshoot CI/CD pipeline issues
@@ -290,7 +283,6 @@ This is a learning laboratory. Feel free to:
 - Docker: https://docs.docker.com/
 - Kubernetes: https://kubernetes.io/docs/
 - Kind: https://kind.sigs.k8s.io/
-- ArgoCD: https://argo-cd.readthedocs.io/
 - Helm: https://helm.sh/docs/
 - Ansible: https://docs.ansible.com/
 - Maven: https://maven.apache.org/guides/

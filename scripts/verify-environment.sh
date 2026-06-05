@@ -268,7 +268,7 @@ echo ""
 
 print_header "Port Availability"
 
-check_port_available 8080 "Jenkins / Application / ArgoCD"
+check_port_available 8080 "Jenkins / Application"
 check_port_available 8082 "Harbor HTTP"
 check_port_available 8443 "Harbor HTTPS"
 check_port_available 9000 "SonarQube"

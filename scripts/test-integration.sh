@@ -12,7 +12,6 @@ FRONTEND_URL="${FRONTEND_URL:-http://localhost:30080}"
 JENKINS_URL="${JENKINS_URL:-http://localhost:8080}"
 HARBOR_URL="${HARBOR_URL:-http://localhost:8082}"
 SONAR_URL="${SONAR_HOST:-http://localhost:9000}"
-ARGOCD_URL="${ARGOCD_SERVER:-http://localhost:8090}"
 
 # Timeout settings (seconds)
 TIMEOUT_SHORT=30
@@ -277,11 +276,6 @@ run_test "SonarQube is accessible" \
     "$TIMEOUT_SHORT" \
     "true"
 
-run_test "ArgoCD is accessible" \
-    "curl -k -s -o /dev/null -w '%{http_code}' '${ARGOCD_URL}' | grep -q '200\|301\|302'" \
-    "$TIMEOUT_SHORT" \
-    "true"
-
 # ============================================
 # POLICY & SECURITY TESTS
 # ============================================
@@ -392,7 +386,7 @@ if [ $TESTS_FAILED -eq 0 ]; then
     echo "  ✅ Database Layer (PostgreSQL)"
     echo "  ✅ Backend Layer (Spring Boot)"
     echo "  ✅ Frontend Layer (React)"
-    echo "  ✅ CI/CD Pipeline (Jenkins, Harbor, SonarQube, ArgoCD)"
+    echo "  ✅ CI/CD Pipeline (Jenkins, Harbor, SonarQube)"
     echo "  ✅ Policy Enforcement (Kyverno)"
     echo "  ✅ Monitoring Stack (Prometheus, Grafana, Loki)"
     echo ""
@@ -404,8 +398,7 @@ if [ $TESTS_FAILED -eq 0 ]; then
     echo "  Jenkins:         ${JENKINS_URL}"
     echo "  Harbor:          ${HARBOR_URL}"
     echo "  SonarQube:       ${SONAR_URL}"
-    echo "  ArgoCD:          ${ARGOCD_URL}"
-    echo "  Grafana:         http://localhost:3000"
+      echo "  Grafana:         http://localhost:3000"
     echo "  Prometheus:      http://localhost:30090"
     echo "  Policy Reporter: http://localhost:31002"
     echo ""

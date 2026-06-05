@@ -53,7 +53,6 @@ echo ""
 echo "This script will remove:"
 echo "  - All running containers (Jenkins, Harbor, SonarQube, Policy Reporter, Grafana)"
 echo "  - Kind Kubernetes cluster"
-echo "  - ArgoCD deployments"
 echo ""
 
 # Ask for confirmation

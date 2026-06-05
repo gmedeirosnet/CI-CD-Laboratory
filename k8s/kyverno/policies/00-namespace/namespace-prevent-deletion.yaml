@@ -5,7 +5,6 @@
 #   This prevents service disruption and data loss in production environments.
 #
 # Protected Namespaces:
-#   - argocd: GitOps deployment controller
 #   - logging: Loki log aggregation system
 #   - monitoring: Prometheus and Grafana stack
 #
@@ -17,7 +16,7 @@
 #   - Maintains audit trail and compliance requirements
 #
 # Example Violation:
-#   kubectl delete namespace argocd
+#   kubectl delete namespace logging
 #   Error: Deletion of namespace is not allowed
 #
 # Override Procedure:
@@ -53,7 +52,6 @@ spec:
               kinds:
                 - Namespace
               names:
-                - argocd
                 - logging
                 - monitoring
       validate:

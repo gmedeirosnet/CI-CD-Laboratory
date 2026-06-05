@@ -140,7 +140,6 @@ This implementation transforms the simple Spring Boot demo into a complete full-
    - Jenkins: http://localhost:8080
    - Harbor: http://localhost:8082
    - SonarQube: http://localhost:9000
-   - ArgoCD: https://localhost:8090
 
 ### Step 1: Deploy PostgreSQL
 
@@ -176,13 +175,10 @@ kubectl logs -n app-demo -l app=postgres --tail=50
    - **Load Frontend into Kind** (NEW)
    - Update Helm Chart
    - Prepare Namespace
-   - Deploy with ArgoCD
+   - Deploy Kyverno Policies
 
 3. **Monitor Build**:
    ```bash
-   # Watch ArgoCD sync
-   kubectl get application -n argocd -w
-
    # Watch pods coming up
    kubectl get pods -n app-demo -w
    ```
@@ -476,7 +472,7 @@ kubectl port-forward -n logging svc/loki 3100:3100
 - [ ] Message queue (Kafka/RabbitMQ)
 - [ ] Elasticsearch for search
 - [ ] Service mesh (Istio)
-- [ ] GitOps with Flux/ArgoCD
+- [ ] GitOps with Flux
 - [ ] Chaos engineering tests
 - [ ] Performance testing (JMeter)
 
@@ -503,8 +499,7 @@ kubectl port-forward -n logging svc/loki 3100:3100
 For issues or questions:
 1. Check logs with `kubectl logs`
 2. Verify deployments with `kubectl get pods -n app-demo`
-3. Check ArgoCD sync status
-4. Review Jenkins build logs
+3. Review Jenkins build logs
 5. Consult the troubleshooting section above
 
 ---
