@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] — branch: main (2026-06-05)
+
+### Claude Code Session — Skill Creation & Project Analysis
+
+#### Analysis
+- Analyzed `memory.md`, `CLAUDE.md`, and `README.md` — identified Java version inconsistency (README says Java 25, CLAUDE.md correctly says Java 21) and broken `plan.md` references (file deleted, still referenced throughout memory.md)
+- Analyzed full git history: 323 commits, 9 months (Sep 2025 – May 2026), 1 author + Dependabot; Oct–Dec 2025 was peak development; 112 fixes / 119 features ratio reflects integration complexity across 14+ tools; 3 reverts all in Jenkinsfile/ArgoCD area
+
+#### Added
+- Created `.claude/skills/devops-engineer.skill` — packaged skill file for distribution
+- Created `.claude/skills/devops.md` — lab-specific DevOps pair programmer skill replacing the original general-purpose version
+- Installed skill at `~/.claude/skills/devops-engineer/SKILL.md` — user-scoped, available across all projects
+
+#### Skill: devops-engineer
+- Tuned to this lab's exact stack instead of generic DevOps
+- Pre-loaded service port table (Jenkins 8080, Harbor 8082, ArgoCD 8090, SonarQube 9000, etc.)
+- Lab-specific diagnostics (`kubectl -n app-demo`, `docker logs jenkins`, `argocd app sync cicd-demo`)
+- Known gotchas documented: ArgoCD/SonarQube port confusion, Harbor insecure registry requirement, Kind image loading step, namespace webhook failures
+- Triggers on: Jenkinsfile, Harbor, Kind, Helm, ArgoCD, Kyverno, SonarQube, Grafana, Loki, Prometheus, BlackDuck, port-forward
+
+---
+
 ## [Unreleased] — branch: BlackDuck
 
 ### Commit Log (chronological)
