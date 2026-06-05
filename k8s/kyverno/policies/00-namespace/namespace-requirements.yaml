@@ -20,7 +20,7 @@
 #
 # Exempted Namespaces:
 #   - kube-* (system namespaces)
-#   - default, kyverno, argocd, monitoring, logging
+#   - default, kyverno, monitoring, logging
 #
 # Example Compliant Namespace:
 #   apiVersion: v1
@@ -68,7 +68,6 @@ spec:
           - kube-*
           - default
           - kyverno
-          - argocd
           - monitoring
           - logging
     validate:

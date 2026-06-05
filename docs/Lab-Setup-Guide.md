@@ -1,7 +1,7 @@
 # Complete CI/CD Pipeline Lab Setup
 
 ## Overview
-This guide provides step-by-step instructions to set up a complete DevOps CI/CD laboratory environment using the following tools: ArgoCD, Kind (K8s in Docker), Docker, GitHub, Harbor, Helm Charts, Maven, Jenkins, SonarQube, Black Duck Detect, Grafana, and Loki.
+This guide provides step-by-step instructions to set up a complete DevOps CI/CD laboratory environment using the following tools: Kind (K8s in Docker), Docker, GitHub, Harbor, Helm Charts, Maven, Jenkins, SonarQube, Black Duck Detect, Grafana, and Loki.
 
 ## Prerequisites
 - macOS (M1 recommended), Linux, or Windows with WSL2
@@ -25,7 +25,7 @@ Developer → GitHub → Jenkins → Maven Build → SonarQube Analysis
                           ↓
                      Docker Build → BlackDuck Detect (SCA) → Harbor Registry
                           ↓
-                     Helm Package → ArgoCD → Kind K8s Cluster
+                     Helm Package → Kind K8s Cluster
                                                     ↓
                                         ┌───────────┴────────────┐
                                         ↓                        ↓
@@ -61,7 +61,6 @@ nano .env  # or use your preferred editor
 | `HARBOR_ROBOT_SECRET` | Robot account token (generated later) | eyJhbGc... |
 | `JENKINS_PASSWORD` | Jenkins admin password | (set during setup) |
 | `SONAR_TOKEN` | SonarQube authentication token | squ_xxxx... |
-| `ARGOCD_ADMIN_PASSWORD` | ArgoCD admin password | (generated during setup) |
 
 **Port Configuration:**
 
@@ -69,7 +68,6 @@ The `.env` file also defines all service ports:
 - Jenkins: 8080
 - Harbor: 8082 (HTTP), 8443 (HTTPS)
 - SonarQube: 9000
-- ArgoCD: 8090
 - Grafana: 3000
 - Application: 8001
 
@@ -207,7 +205,7 @@ sleep 30
 - Port 8080 is for web UI, port 50000 is for Jenkins agents
 - Volume `jenkins_home` persists Jenkins data between restarts
 
-#### Step 2: Install Docker CLI and ArgoCD CLI in Jenkins Container
+#### Step 2: Install Docker CLI in Jenkins Container
 ```bash
 # Install Docker CLI in Jenkins container
 echo "Installing Docker CLI in Jenkins..."
@@ -233,21 +231,10 @@ docker exec -u root jenkins chmod 666 /var/run/docker.sock
 # Verify Docker is working
 docker exec jenkins docker --version
 docker exec jenkins docker ps
-
-# Install ArgoCD CLI in Jenkins container
-echo "Installing ArgoCD CLI..."
-docker exec -u root jenkins bash -c "
-  curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-  chmod +x /usr/local/bin/argocd
-"
-
-# Verify ArgoCD CLI
-docker exec jenkins argocd version --client
 ```
 
 **Why These Tools?**
 - **Docker CLI**: Allows Jenkins to build and push Docker images
-- **ArgoCD CLI**: Enables Jenkins to trigger deployments to Kubernetes
 - Script automatically detects ARM64 (Apple Silicon) or AMD64 architecture
 
 #### Step 3: Configure Jenkins Initial Setup
@@ -626,202 +613,7 @@ kind load docker-image host.docker.internal:8082/cicd-demo/app:latest \
 
 **Note**: This step must be automated in your Jenkins pipeline. See `docs/Harbor-Kind-Integration.md` for complete details and Jenkins integration.
 
-## Phase 4: ArgoCD Installation
-
-### 4.1 Install ArgoCD on Kind Cluster
-```bash
-# Create namespace
-kubectl create namespace argocd
-
-# Install ArgoCD
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-# Wait for pods to be ready
-kubectl wait --for=condition=Ready pods --all -n argocd --timeout=300s
-
-# Get initial password
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-
-# Port forward to access UI
-kubectl port-forward svc/argocd-server -n argocd 8090:443
-
-# Access at https://localhost:8090
-# Login: admin / [password from above]
-
-# Or install CLI
-brew install argocd
-argocd login localhost:8090
-```
-
-### 4.2 Configure ArgoCD Credentials in Jenkins
-
-Before ArgoCD can be used in the Jenkins pipeline, you need to add ArgoCD credentials to Jenkins.
-
-#### Step 1: Get ArgoCD Admin Password
-```bash
-# Get the initial admin password
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-echo
-
-# Copy this password - you'll need it for Jenkins
-```
-
-#### Step 2: Add Credential to Jenkins
-1. Open Jenkins at http://localhost:8080
-2. Go to **Manage Jenkins** → **Credentials** → **System**
-3. Click **Global credentials (unrestricted)**
-4. Click **Add Credentials**
-
-#### Step 3: Configure Credential
-
-| Field | Value |
-|-------|-------|
-| **Kind** | Username with password |
-| **Scope** | Global |
-| **Username** | `admin` |
-| **Password** | [paste the password from step 1] |
-| **ID** | `argocd-credentials` |
-| **Description** | ArgoCD admin credentials for deployment |
-
-#### Step 4: Save
-Click **Create**
-
-**Important Notes:**
-- The credential ID must be exactly `argocd-credentials` (as referenced in Jenkinsfile)
-- The username is always `admin` for initial setup
-- You can change the ArgoCD admin password later via UI or CLI
-- For production, consider creating a dedicated ArgoCD service account
-
-**Verify Credential:**
-```bash
-# Test ArgoCD login from Jenkins container
-docker exec jenkins argocd login host.docker.internal:8090 \
-  --username admin \
-  --password [your-password] \
-  --insecure \
-  --grpc-web
-```
-
-### 4.3 Configure ArgoCD Repository Access
-```bash
-# Running the following command to allow ArgoCD to access the local Kind cluster
-1. chmod 0755 scripts/setup-argocd-repo.sh
-2. ./scripts/setup-argocd-repo.sh
-```
-
-### 4.4 Create Application in ArgoCD
-
-#### Method 1: Using ArgoCD UI
-1. Access ArgoCD UI at https://localhost:8090
-2. Login with credentials (admin / [password from step 4.1])
-3. Click **+ NEW APP** button in the top-left
-4. Fill in the application details:
-
-   **General:**
-   - **Application Name**: `cicd-demo`
-   - **Project**: `default`
-   - **Sync Policy**:
-     - Select `Automatic`
-     - Check `PRUNE RESOURCES` (removes resources deleted from Git)
-     - Check `SELF HEAL` (reverts manual changes)
-
-   **Source:**
-   - **Repository URL**: `https://github.com/yourusername/cicd-demo.git`
-   - **Revision**: `HEAD` or `main`
-   - **Path**: `helm-charts/cicd-demo`
-
-   **Destination:**
-   - **Cluster URL**: `https://kubernetes.default.svc` (in-cluster)
-   - **Namespace**: `app-demo`
-
-   **Helm (if using Helm chart):**
-   - Leave values as default or customize as needed
-   - You can override values here or use values.yaml
-
-5. Click **CREATE** at the top
-6. The application will appear in the ArgoCD dashboard
-7. Click **SYNC** to deploy the application to the cluster
-8. Monitor the sync status and resource health
-
-#### Method 2: Using ArgoCD CLI
-```bash
-# Login to ArgoCD
-argocd login localhost:8090
-
-# Create application
-argocd app create cicd-demo \
-  --repo https://github.com/yourusername/cicd-demo.git \
-  --path helm-charts/cicd-demo \
-  --dest-server https://kubernetes.default.svc \
-  --dest-namespace app-demo \
-  --sync-policy automated \
-  --auto-prune \
-  --self-heal
-
-# Sync application
-argocd app sync cicd-demo
-
-# Check status
-argocd app get cicd-demo
-
-# Watch sync progress
-argocd app wait cicd-demo --timeout 300
-```
-
-#### Method 3: Using Declarative YAML
-```bash
-# Create application manifest
-cat > argocd-apps/cicd-demo-app.yaml << 'EOF'
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cicd-demo
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/yourusername/cicd-demo.git
-    targetRevision: HEAD
-    path: helm-charts/cicd-demo
-    helm:
-      valueFiles:
-        - values.yaml
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: app-demo
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: false
-    syncOptions:
-      - CreateNamespace=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
-EOF
-
-# Apply the manifest
-kubectl apply -f argocd-apps/cicd-demo-app.yaml
-
-# Verify application created
-argocd app get cicd-demo
-```
-
-**Important Notes:**
-- If using a private repository, add repository credentials in ArgoCD:
-  - Settings > Repositories > CONNECT REPO
-  - Choose connection method: HTTPS or SSH
-  - Provide credentials (username/password or SSH key)
-- Sync policy `automated` enables continuous deployment (GitOps)
-- `PRUNE RESOURCES` removes Kubernetes resources when removed from Git
-- `SELF HEAL` reverts manual kubectl changes back to Git state
-- For initial testing, you might want manual sync to control deployments
-
-## Phase 5: Grafana & Loki Logging Setup
+## Phase 4: Grafana & Loki Logging Setup
 
 ### 5.1 Install Loki (Log Aggregation)
 
@@ -859,7 +651,7 @@ kubectl get svc -n logging loki
 
 ### 5.2 Setup Port Forwarding for Monitoring Services
 
-Use the automated port forwarding script to expose Loki, Prometheus, and ArgoCD:
+Use the automated port forwarding script to expose Loki and Prometheus:
 
 ```bash
 # Navigate to project root (if in k8s/grafana directory)
@@ -876,7 +668,6 @@ chmod +x k8s/k8s-permissions_port-forward.sh
 1. **Fixes Docker socket permissions** for Jenkins container
 2. **Port forwards Loki** - localhost:31000 → logging/loki:3100
 3. **Port forwards Prometheus** - localhost:30090 → monitoring/prometheus:9090
-4. **Port forwards ArgoCD** - localhost:8090 → argocd/argocd-server:443
 
 **Script Commands:**
 ```bash
@@ -906,9 +697,6 @@ curl http://localhost:31000/ready
 curl http://localhost:30090/-/healthy
 # Should return: Prometheus is Healthy.
 
-# Test ArgoCD
-curl -k https://localhost:8090/healthz
-# Should return: ok
 ```
 
 **Important Notes:**
@@ -1151,111 +939,10 @@ kubectl get clusterpolicies
 # require-resource-limits       true         Audit             true
 ```
 
-#### Method 2: GitOps with ArgoCD (Recommended)
-
-Deploy policies using ArgoCD for automatic synchronization with Git:
-
+**Verify deployment:**
 ```bash
-# Deploy Kyverno policies application
-kubectl apply -f argocd-apps/kyverno-policies.yaml
-
-# Check sync status
-argocd app get kyverno-policies
-
-# Or view in ArgoCD UI
-# Visit https://localhost:8090
-# Look for "kyverno-policies" application
-```
-
-**GitOps Benefits:**
-- ✅ Policies automatically sync with Git repository
-- ✅ Changes to policies in Git are auto-deployed
-- ✅ Self-healing: Manual changes are reverted to Git state
-- ✅ Full audit trail of policy changes
-- ✅ Easy rollback to previous versions
-
-**ArgoCD Application Configuration** (`argocd-apps/kyverno-policies.yaml`):
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: kyverno-policies
-  namespace: argocd
-  labels:
-    app: kyverno
-    managed-by: argocd
-spec:
-  project: default
-
-  source:
-    repoURL: https://github.com/gmedeirosnet/CI.CD
-    targetRevision: main
-    path: k8s/kyverno/policies
-    directory:
-      recurse: true  # Include all subdirectories
-
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: kyverno
-
-  syncPolicy:
-    automated:
-      prune: true      # Remove resources not in Git
-      selfHeal: true   # Revert manual changes
-      allowEmpty: false
-    syncOptions:
-      - CreateNamespace=false  # Namespace already exists
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
-
-  # Ignore status changes (updated by Kyverno)
-  ignoreDifferences:
-  - group: kyverno.io
-    kind: ClusterPolicy
-    jsonPointers:
-    - /status
-```
-
-**Configuration Details:**
-- **Source**: Pulls policies from `k8s/kyverno/policies` directory in main branch
-- **Automated Sync**: Continuously monitors Git for changes
-- **Prune**: Removes policies deleted from Git
-- **Self-Heal**: Reverts manual kubectl changes back to Git state
-- **Retry Logic**: Automatic retry with exponential backoff
-- **Status Ignore**: Prevents unnecessary syncs from Kyverno status updates
-
-**Verify ArgoCD deployment:**
-```bash
-# Check application status
-argocd app get kyverno-policies
-
-# Expected output:
-# Name:               kyverno-policies
-# Project:            default
-# Server:             https://kubernetes.default.svc
-# Namespace:          kyverno
-# URL:                https://localhost:8090/applications/kyverno-policies
-# Repo:               https://github.com/gmedeirosnet/CI.CD
-# Target:             main
-# Path:               k8s/kyverno/policies
-# SyncWindow:         Sync Allowed
-# Sync Policy:        Automated (Prune)
-# Sync Status:        Synced to main
-# Health Status:      Healthy
-
 # View deployed policies
 kubectl get clusterpolicies
-
-# Check ArgoCD application health
-kubectl get application kyverno-policies -n argocd -o yaml
-
-# View sync history
-argocd app history kyverno-policies
 ```
 
 **Policy Details:**
@@ -1268,7 +955,7 @@ kubectl describe clusterpolicy prevent-app-demo-namespace-deletion
 
 **namespace-requirements.yaml**
 - Requires `team` and `purpose` labels on all namespaces
-- Excludes system namespaces (kube-system, kyverno, argocd, etc.)
+- Excludes system namespaces (kube-system, kyverno, etc.)
 - Helps with organization and cost tracking
 - **Mode**: Audit
 
@@ -1606,7 +1293,6 @@ helm package cicd-demo
 ### 8.1 Configure Jenkins Credentials
 1. Manage Jenkins > Credentials
 2. Add credentials:
-   - **ArgoCD**: username + password (ID: `argocd-credentials`) - See Section 4.2
    - **GitHub**: username + token (ID: `github-credentials`)
    - **Harbor**: username + password (ID: `harbor-credentials`) - See Section 2.3
    - **SonarQube**: secret text (token) (ID: `sonarqube-token`) - See Section 2.2
@@ -1713,28 +1399,6 @@ pipeline {
                 sh """
                     cd helm-charts/cicd-demo
                     sed -i '' 's/tag: .*/tag: "${IMAGE_TAG}"/' values.yaml
-                    git add values.yaml
-                    git commit -m "Update image tag to ${IMAGE_TAG}" || true
-                    git push origin main || true
-                """
-            }
-        }
-
-        stage('Deploy with ArgoCD') {
-            steps {
-                sh """
-                    argocd app create cicd-demo \
-                        --repo https://github.com/yourusername/cicd-demo.git \
-                        --path helm-charts/cicd-demo \
-                        --dest-server https://kubernetes.default.svc \
-                        --dest-namespace ${NAMESPACE} \
-                        --sync-policy automated \
-                        --auto-prune \
-                        --self-heal \
-                        || true
-
-                    argocd app sync cicd-demo
-                    argocd app wait cicd-demo --timeout 300
                 """
             }
         }
@@ -1791,7 +1455,6 @@ git push origin main
 # Watch Jenkins build
 # Check SonarQube analysis at http://localhost:9000
 # Check Harbor for new image at http://localhost:8082
-# Check ArgoCD sync status at https://localhost:8090
 # Check Kubernetes pods
 kubectl get pods -w
 
@@ -1817,9 +1480,6 @@ curl http://localhost:3000/api/health
 
 # Loki
 curl http://localhost:31000/ready
-
-# ArgoCD
-kubectl get pods -n argocd
 
 # Application
 kubectl get pods
@@ -1850,9 +1510,6 @@ kubectl logs -f deployment/cicd-demo -n app-demo
 
 ### 11.1 Remove Resources
 ```bash
-# Delete ArgoCD application
-argocd app delete cicd-demo
-
 # Delete Kind cluster
 kind delete cluster --name app-demo
 
@@ -1912,10 +1569,7 @@ docker exec -u root jenkins bash -c "
 #### 2. Harbor SSL errors
 **Solution:** Use http for local testing
 
-#### 3. ArgoCD sync fails
-**Solution:** Check GitHub credentials and repository access
-
-#### 4. Kind cluster fails to start
+#### 3. Kind cluster fails to start
 **Solution:** Restart Docker Desktop and try again
 
 #### 5. SonarQube out of memory
@@ -1925,7 +1579,7 @@ docker exec -u root jenkins bash -c "
 **Solution:** Check `kubectl describe pod <name>` and verify images are loaded
 
 #### 7. Port conflicts
-**Solution:** Check if ports 30000-30002, 8080, 8090 are already in use
+**Solution:** Check if ports 30000-30002, 8080, 9000 are already in use
 
 #### 8. Initial admin password not found
 **Error:** `cat: /var/jenkins_home/secrets/initialAdminPassword: No such file or directory`

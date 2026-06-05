@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] — branch: fix/argocd_remove (2026-06-05)
+
+### ArgoCD Removal Refactor — `ae6976e`
+
+#### Summary
+Removed ArgoCD entirely from the project stack. ArgoCD was the GitOps delivery layer between Jenkins and the Kind cluster. Deployments now go directly via `kubectl` / Helm. Net change: -2,238 lines, +127 lines across 34 files.
+
+#### Deleted
+- `argocd-apps/` directory — `cicd-demo.yaml`, `kyverno-policies.yaml`, `sample-nginx-app.yaml`, `README.md`
+- `scripts/setup-argocd-repo.sh` — ArgoCD repository bootstrap script
+- `docs/ArgoCD.md`, `docs/ArgoCD-QuickStart.md`, `docs/ArgoCD_setup-argocd-repo.md`
+
+#### Pipeline Changes (`Jenkinsfile`, `Jenkinsfile-kyverno-policies`)
+- Removed `Deploy with ArgoCD` stage (login, app create, app wait, app get)
+- Kyverno policies now applied directly via `kubectl apply -f` instead of ArgoCD sync
+
+#### Scripts Updated
+- `setup-all.sh`, `deploy-fullstack.sh`, `cleanup-all.sh` — ArgoCD steps removed
+- `setup-jenkins-docker.sh` — ArgoCD CLI installation removed
+- `setup-jenkins-kyverno-job.sh` — switched from ArgoCD sync to direct `kubectl apply`
+- `test-integration.sh` — ArgoCD accessibility tests removed
+- `verify-environment.sh` — port 8090 (ArgoCD) availability check removed
+
+#### Infrastructure / Policy Changes
+- `k8s/k8s-permissions_port-forward.sh` — port 8090 forwarding entry removed
+- Kyverno policies — `argocd` removed from exempted/protected namespace lists
+
+#### Documentation Updated
+- `docs/Port-Reference.md`, `docs/Lab-Setup-Guide.md`, `docs/Troubleshooting.md`, `docs/CHEAT-SHEET-Commands.md`, `docs/FULLSTACK-DEPLOYMENT.md`, `docs/INDEX.md`, `docs/Project-Overview.md`, `README.md`, `CLAUDE.md` — ArgoCD references removed
+- `.env.template` — ArgoCD credential variables removed
+
+#### Note
+28 files still contain ArgoCD mentions (historical docs, plan files, version history in this file). These are documentation artifacts from prior phases, not live references.
+
+---
+
 ## [Unreleased] — branch: main (2026-06-05)
 
 ### Claude Code Session — Skill Creation & Project Analysis

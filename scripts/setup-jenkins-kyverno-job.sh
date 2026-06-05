@@ -77,7 +77,7 @@ fi
 cat > /tmp/kyverno-job-config.xml <<EOF
 <?xml version='1.1' encoding='UTF-8'?>
 <flow-definition plugin="workflow-job@2.40">
-  <description>Deploy Kyverno policies to Kubernetes cluster via ArgoCD</description>
+  <description>Deploy Kyverno policies to Kubernetes cluster via kubectl</description>
   <keepDependencies>false</keepDependencies>
   <properties>
     <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
@@ -164,8 +164,7 @@ echo ""
 echo "The pipeline will:"
 echo "  ✓ Validate all Kyverno policy files"
 echo "  ✓ Check Kyverno installation"
-echo "  ✓ Create/update ArgoCD application"
-echo "  ✓ Sync policies to cluster via ArgoCD"
+echo "  ✓ Apply policies directly to cluster via kubectl"
 echo "  ✓ Verify deployment and test enforcement"
 echo ""
 echo -e "${GREEN}Setup complete!${NC}"

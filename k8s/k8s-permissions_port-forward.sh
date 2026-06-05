@@ -11,10 +11,8 @@
 # MANAGED SERVICES:
 #   - Loki:       localhost:31000 → logging/loki:3100        (Log aggregation)
 #   - Prometheus: localhost:30090 → monitoring/prometheus:9090 (Metrics)
-#   - ArgoCD:     localhost:8090  → argocd/argocd-server:443  (GitOps UI)
 #
 # PORT MAPPING STRATEGY:
-#   - ArgoCD:     8090 (avoids conflict with Jenkins on 8080)
 #   - Loki:       31000 (matches NodePort for consistency)
 #   - Prometheus: 30090 (matches NodePort for consistency)
 #
@@ -63,7 +61,7 @@
 #
 # TROUBLESHOOTING:
 #   Port already in use:
-#     lsof -i :8090
+#     lsof -i :<PORT>
 #     kill -9 <PID>
 #
 #   Service not found:
@@ -98,7 +96,6 @@ typeset -A PORT_FORWARDS
 PORT_FORWARDS=(
     loki "logging:loki:31000:3100"
     prometheus "monitoring:prometheus:30090:9090"
-    argocd "argocd:argocd-server:8090:443"
 )
 
 # PID file location

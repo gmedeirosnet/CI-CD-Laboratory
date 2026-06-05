@@ -8,7 +8,6 @@ This document provides a comprehensive reference for all network ports used in t
 | Service | Internal Port | External Port | Protocol | Access URL | Purpose |
 |---------|--------------|---------------|----------|------------|---------|
 | **Application** | 8001 | 8001 | HTTP | http://localhost:8001 | Demo Spring Boot app |
-| **ArgoCD** | 443 | 8090 | HTTPS | https://localhost:8090 | GitOps deployment UI |
 | **Grafana** | 3000 | 3000 | HTTP | http://localhost:3000 | Observability & Logs UI |
 | **Harbor (HTTP)** | 80 | 8082 | HTTP | http://localhost:8082 | Container registry web UI |
 | **Harbor (HTTPS)** | 443 | 8443 | HTTPS | https://localhost:8443 | Secure container registry |
@@ -27,7 +26,6 @@ This document provides a comprehensive reference for all network ports used in t
 **Note on Port Mappings**:
 - **Internal Port**: Port the service listens on inside the container/pod
 - **External Port**: Port exposed on localhost for access from your machine
-- **ArgoCD 8090**: Avoids conflict with Jenkins (8080), used by automated script
 - **Loki/Prometheus**: NodePort mappings match external ports for consistency
 
 ## Automated Port Forwarding
@@ -38,7 +36,7 @@ The lab includes an automated script for managing Kubernetes port forwards and D
 
 **Features**:
 - Automatically fixes Docker socket permissions for Jenkins
-- Manages port forwards for Loki, Prometheus, and ArgoCD
+- Manages port forwards for Loki and Prometheus
 - PID-based tracking for reliable start/stop
 - Status monitoring and orphaned process cleanup
 
@@ -66,9 +64,6 @@ The lab includes an automated script for managing Kubernetes port forwards and D
 **Managed Services**:
 - **Loki**: localhost:31000 → logging/loki:3100
 - **Prometheus**: localhost:30090 → monitoring/prometheus:9090
-- **ArgoCD**: localhost:8090 → argocd/argocd-server:443
-
-**Note**: When using automated script, ArgoCD is on 8090. For manual port-forward, use 8081 to avoid Jenkins conflict.
 
 **PID Files**: Stored in `/tmp/k8s-port-forward/*.pid`
 
@@ -242,12 +237,6 @@ kubectl port-forward -n logging svc/loki 31000:3100
 # Prometheus (from K8s to host)
 kubectl port-forward -n monitoring svc/prometheus 30090:9090
 
-# ArgoCD (from K8s to host)
-# Manual Port Forward Examples
-# Note: Use 8081 for manual setup (8080 conflicts with Jenkins)
-# Automated script uses 8090
-kubectl port-forward -n argocd svc/argocd-server 8081:443
-
 # Grafana (if in K8s)
 kubectl port-forward -n grafana svc/grafana 3000:3000
 ```
@@ -301,59 +290,6 @@ Kubernetes Service:
   Port: 80 -> 8001
   TargetPort: 8001
 ```
-
----
-
-### ArgoCD
-
-```yaml
-Server Port:
-  External: 8090 (HTTPS - automated script)
-  Internal: 443 (HTTPS)
-  Protocol: HTTPS
-
-API Server:
-  URL: https://localhost:8090
-  gRPC Port: 8080 (internal only)
-
-Repo Server:
-  Internal Port: 8081
-
-Redis:
-  Internal Port: 6379
-
-Metrics:
-  Internal Port: 8082
-
-Namespace:
-  argocd (Kind K8s)
-
-Health Check:
-  URL: https://localhost:8090/healthz
-  Expected Response: {"status":"Healthy"}
-```
-
-**Automated Access (Recommended)**:
-```bash
-# Start port forward (includes Docker permission fix)
-./k8s/k8s-permissions_port-forward.sh start
-
-# Access UI
-open https://localhost:8090
-```
-
-**Manual Port Forward Command**:
-```bash
-# Note: Use port 8090 to match automated setup and avoid Jenkins conflict (8080)
-kubectl port-forward -n argocd svc/argocd-server 8090:443
-```
-
-**Port Mapping Explanation**:
-- **Kubernetes Service**: argocd-server runs on port 443 (HTTPS) inside the cluster
-- **Port Forward**: kubectl forwards localhost:8090 → cluster:443
-- **Why 8090?**: Avoids conflict with Jenkins (8080) and provides consistent access URL
-
-**Note**: Automated script uses port 8090 to avoid conflict with Jenkins (8080). For manual setup, always use 8090 for consistency.
 
 ---
 
@@ -424,7 +360,7 @@ pkill -f "port-forward.*kyverno-svc-metrics"
 
 | Port | Common Conflicts | Solution |
 |------|-----------------|----------|
-| 8080 | Jenkins, Application, Tomcat | Use different external ports (ArgoCD→8090) |
+| 8080 | Jenkins, Application, Tomcat | Use different external ports for other services |
 | 9000 | SonarQube, Other applications | Change SonarQube port |
 | 8082 | Harbor, Other services | Modify Harbor configuration |
 | 3000 | Node.js apps, Grafana, Dev servers | Use alternative port (3001) |
@@ -557,7 +493,6 @@ Special Hostname:
 
 Use Cases:
   - Pods pulling from Harbor: host.docker.internal:8082
-  - ArgoCD accessing Git on host
   - Accessing services running on Docker Desktop
 ```
 
@@ -574,7 +509,6 @@ Linux:
 
 Common Use Cases:
   - Kind cluster → Harbor (host.docker.internal:8082)
-  - Jenkins → ArgoCD (host.docker.internal:8090)
   - Container → Service on host
 ```
 
@@ -656,7 +590,6 @@ Pod to Service:
 | Loki | http://localhost:31000/ready | ready |
 | Prometheus | http://localhost:30090/-/ready | Prometheus is Ready. |
 | Prometheus (Healthy) | http://localhost:30090/-/healthy | Prometheus is Healthy. |
-| ArgoCD | https://localhost:8090/healthz | {"status":"Healthy"} |
 | Kind API | kubectl get --raw='/healthz' | ok |
 
 **Testing Health Checks**:
@@ -730,10 +663,6 @@ kubectl port-forward deployment/my-deployment 8080:80 -n default
 ### Lab-Specific Examples
 
 ```bash
-# ArgoCD Server (HTTPS)
-kubectl port-forward -n argocd svc/argocd-server 8090:443
-# Access: https://localhost:8090
-
 # Loki (Log aggregation)
 kubectl port-forward -n logging svc/loki 31000:3100
 # Access: http://localhost:31000
@@ -772,8 +701,6 @@ kubectl port-forward svc/jenkins 8080:8080 50000:50000
 # Listen on all interfaces (DANGEROUS - use with caution)
 kubectl port-forward --address 0.0.0.0 svc/my-service 8080:80
 
-# Specific pod selection
-kubectl port-forward $(kubectl get pod -n argocd -l app.kubernetes.io/name=argocd-server -o jsonpath='{.items[0].metadata.name}') 8090:8080 -n argocd
 ```
 
 ### Managing Port Forwards
@@ -789,14 +716,7 @@ pkill -f "port-forward.*loki"
 pkill -f "kubectl port-forward"
 
 # Check if port forward is working
-lsof -i :8090
-
-# Restart port forward programmatically
-PORT_FORWARD_PID=$(pgrep -f "port-forward.*argocd")
-if [ -n "$PORT_FORWARD_PID" ]; then
-    kill $PORT_FORWARD_PID
-fi
-kubectl port-forward svc/argocd-server 8090:443 -n argocd &
+lsof -i :<PORT>
 ```
 
 ### Port Forward Best Practices
@@ -840,7 +760,6 @@ This lab includes an automated port-forward management script:
 **Managed Services**:
 - Loki: localhost:31000 → logging/loki:3100
 - Prometheus: localhost:30090 → monitoring/prometheus:9090
-- ArgoCD: localhost:8090 → argocd/argocd-server:443
 
 **PID Tracking**: PIDs stored in `/tmp/k8s-port-forward/*.pid`
 
@@ -976,7 +895,7 @@ kubectl logs <pod-name>
 1. **Localhost Only**: By default, all services bind to localhost for security
 2. **Production**: Never expose these ports directly to the internet
 3. **Credentials**: Use environment variables, not hardcoded passwords
-4. **SSL/TLS**: Enable HTTPS for Harbor, ArgoCD in production environments
+4. **SSL/TLS**: Enable HTTPS for Harbor in production environments
 5. **Firewall**: Configure firewall rules for remote access scenarios
 
 ---

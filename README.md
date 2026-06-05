@@ -13,7 +13,6 @@ This repository provides a complete learning experience for mastering DevOps CI/
 
 ### Continuous Integration/Delivery
 - **Jenkins** - Industry-leading CI/CD automation server
-- **ArgoCD** - GitOps continuous delivery for Kubernetes
 
 ### Version Control & Artifacts
 - **GitHub** - Source code management and collaboration
@@ -67,7 +66,6 @@ CI.CD/
 ├── .gitignore                  # Git ignore rules
 │
 ├── docs/                        # Comprehensive documentation
-│   ├── ArgoCD.md               # ArgoCD guide
 │   ├── Kind-K8s.md             # Kind (K8s in Docker) guide
 │   ├── Docker.md               # Docker guide
 │   ├── Harbor.md               # Harbor guide
@@ -151,7 +149,6 @@ The fastest way to get started:
 # - Grafana:          http://localhost:3000
 # - Prometheus:       http://localhost:30090
 # - Loki:             http://localhost:31000
-# - ArgoCD:           https://localhost:8090
 # - Policy Reporter:  http://localhost:31002 (UI)
 # - Policy Reporter:  http://localhost:31001 (API)
 #
@@ -163,7 +160,6 @@ The fastest way to get started:
 # - Grafana:          http://localhost:3000/api/health
 # - Prometheus:       http://localhost:30090/-/healthy
 # - Loki:             http://localhost:31000/ready
-# - ArgoCD:           https://localhost:8090/healthz
 
 # 5. (Optional) Install Kyverno policy engine with Policy Reporter:
 cd k8s/kyverno
@@ -203,7 +199,7 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
    - Install suggested plugins
    - Create admin user
 
-3. **Access Harbor** at http://localhost:8082
+2. **Access Harbor** at http://localhost:8082
    - Login: admin / Harbor12345
    - Create project `cicd-demo`:
      - Click **Projects** > **NEW PROJECT**
@@ -219,7 +215,7 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
      - Username: `robot$robot-ci-cd-demo`
      - Password: (the token from script)
 
-4. **Configure Docker to use Harbor**
+3. **Configure Docker to use Harbor**
    ```bash
    # Add to Docker daemon.json:
    {
@@ -228,18 +224,18 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
    # Restart Docker Desktop
    ```
 
-5. **Access Grafana** at http://localhost:3000
+4. **Access Grafana** at http://localhost:3000
    - Login: admin / admin (change on first login)
    - Verify datasources: Loki and Prometheus should be pre-configured
    - Import dashboards or create custom queries
 
-6. **Access Policy Reporter** at http://localhost:31002 (optional)
+5. **Access Policy Reporter** at http://localhost:31002 (optional)
    - View Kyverno policy violations in real-time
    - Monitor cluster compliance status
    - Filter violations by namespace, policy, and severity
    - API available at http://localhost:31001
 
-7. **Deploy PostgreSQL Database**
+6. **Deploy PostgreSQL Database**
    ```bash
    ./scripts/deploy-fullstack.sh
    ```
@@ -247,14 +243,14 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
    - Creates cicd_demo database
    - Runs comprehensive validation
 
-8. **Verify Database Deployment**
+7. **Verify Database Deployment**
    ```bash
    ./scripts/test-deployment.sh
    ```
    - Runs 20 comprehensive tests
    - Validates pod, service, connectivity, security, functionality
 
-9. **Run your first pipeline**
+8. **Run your first pipeline**
    - Create Jenkins pipeline from Jenkinsfile
    - Trigger build
    - Watch it build backend (Spring Boot) → build frontend (React) → push to Harbor → deploy to Kind
@@ -289,7 +285,6 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
 - Helm
 
 ### Phase 4: Configuration and Deployment (2-3 weeks)
-- ArgoCD GitOps
 - Harbor security
 
 ### Phase 5: Observability and Policy (3-4 weeks)
@@ -311,7 +306,7 @@ Developer → GitHub → Jenkins → Maven → SonarQube
                          ↓
                     Docker Build → BlackDuck Detect (SCA) → Harbor
                          ↓
-                    Kind Image Load → Helm Package → ArgoCD → Kind K8s
+                    Kind Image Load → Helm Package → Kind K8s
                                                                  ↓
                                                ┌─────────────────┴─────────────────┐
                                                ↓                                   ↓
@@ -339,7 +334,7 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 6. **Registry** - Push to Harbor
 7. **Image Loading** - Load images into Kind cluster nodes
 8. **Packaging** - Helm chart update with new image tag
-9. **GitOps Sync** - ArgoCD deploys to Kubernetes
+9. **Deploy** - Helm deploys to Kind Kubernetes cluster
 10. **Policy Validation** - Kyverno validates resources (Audit mode)
 11. **Monitoring** - Logs to Loki, metrics to Prometheus, violations to Policy Reporter
 12. **Visualization** - Grafana dashboards and Policy Reporter UI
@@ -355,7 +350,6 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 - **Policy Enforcement** - Kyverno policy engine in Audit mode with Policy Reporter dashboard
 - **Hands-on Labs** - Practical exercises for each tool
 - **Real-world Patterns** - Multi-service deployment, database integration, API design
-- **GitOps Workflow** - ArgoCD-based deployment automation with auto-sync
 - **Container Registry** - Harbor with security scanning and robot accounts
 - **Code Quality Gates** - SonarQube integration with quality profiles
 - **Local Kubernetes** - Kind cluster with multi-node setup for safe testing
@@ -367,7 +361,7 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 ## Key Resources
 
 ### Essential Documentation
-- [📚 Documentation Index](docs/INDEX.md) - **Master index of all documentation**
+- [Documentation Index](docs/INDEX.md) - **Master index of all documentation**
 - [Architecture Diagram](docs/Architecture-Diagram.md) - Visual pipeline overview
 - [Lab Setup Guide](docs/Lab-Setup-Guide.md) - Complete setup instructions
 - [Port Reference](docs/Port-Reference.md) - All service ports and URLs
@@ -380,7 +374,6 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 - [Harbor](docs/Harbor.md) - Container registry
 - [Kind](docs/Kind-K8s.md) - Local Kubernetes
 - [Helm](docs/Helm-Charts.md) - Package management
-- [ArgoCD](docs/ArgoCD.md) - GitOps deployment
 - [SonarQube](docs/SonarQube.md) - Code quality
 - [Black Duck Detect](docs/BlackDuck.md) - SCA vulnerability and license scanning
 - [Maven](docs/Maven.md) - Build automation
@@ -503,9 +496,6 @@ CI.CD/
 ├── harbor/               # Harbor registry setup
 │   └── docker-compose.yml
 │
-├── argocd-apps/         # ArgoCD applications
-│   └── sample-nginx-app.yaml
-│
 └── instructions/         # JSON configs for AI assistance
     ├── instructions.json
     ├── tools.json
@@ -537,7 +527,7 @@ CI.CD/
 After completing this lab, you will be able to:
 - Build and containerize applications with Docker (multi-stage builds)
 - Create automated CI/CD pipelines with Jenkins (12+ stages)
-- Deploy full-stack applications to Kubernetes using GitOps (ArgoCD)
+- Deploy full-stack applications to Kubernetes using Helm
 - **Design three-tier architectures** (Database + Backend + Frontend)
 - **Implement database persistence** with PostgreSQL and StatefulSets
 - **Build REST APIs** with Spring Boot, JPA, and Flyway migrations
@@ -557,7 +547,6 @@ After completing this lab, you will be able to:
 - Troubleshoot containerized applications
 - Follow DevOps best practices and security standards
 - Integrate monitoring across the entire pipeline
-- Use ArgoCD for automated deployments with auto-sync and self-healing
 
 ## Guidelines
 
@@ -585,7 +574,7 @@ cp .env.template .env
 **Key Variables:**
 - GitHub credentials and repository info
 - Harbor registry and robot account
-- Jenkins, SonarQube, ArgoCD passwords
+- Jenkins, SonarQube passwords
 - Service port mappings
 - Kubernetes and Kind cluster config
 
@@ -603,7 +592,6 @@ Complete reference to all documentation files in this repository:
 - [Cleanup Guide](docs/Cleanup-Guide.md) - Teardown procedures and cleanup scripts
 
 ### Tools & Technologies
-- [ArgoCD](docs/ArgoCD.md) - GitOps continuous delivery guide
 - [Docker](docs/Docker.md) - Containerization fundamentals and best practices
 - [Grafana & Loki](docs/Grafana-Loki.md) - Monitoring, logging, and Prometheus integration
 - [Harbor](docs/Harbor.md) - Container registry setup and management
@@ -616,8 +604,6 @@ Complete reference to all documentation files in this repository:
 - [Kyverno](k8s/kyverno/README.md) - Policy engine and compliance
 
 ### Quick Reference Guides
-- [ArgoCD Quick Setup](docs/ArgoCD-QuickStart.md) - Fast ArgoCD configuration
-- [ArgoCD Repository Setup](docs/ArgoCD_setup-argocd-repo.md) - Repository access configuration
 - [Harbor-Kind Integration](docs/Harbor-Kind-Integration.md) - Connecting Harbor with Kind cluster
 - [SonarQube Quick Reference](docs/SonarQube-QuickRef.md) - Common SonarQube operations
 - [SonarQube Setup](docs/SonarQube-Setup.md) - Detailed installation instructions
@@ -641,7 +627,6 @@ Complete reference to all documentation files in this repository:
 - [Jenkins](https://www.jenkins.io/doc/)
 - [Docker](https://docs.docker.com/)
 - [Kubernetes](https://kubernetes.io/docs/)
-- [ArgoCD](https://argo-cd.readthedocs.io/)
 - [Helm](https://helm.sh/docs/)
 - [Maven](https://maven.apache.org/guides/)
 - [SonarQube](https://docs.sonarqube.org/)

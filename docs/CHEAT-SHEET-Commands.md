@@ -313,32 +313,6 @@ mvn clean package sonar:sonar \
 curl http://localhost:9000/api/qualitygates/project_status?projectKey=cicd-demo
 ```
 
-## ArgoCD
-
-### Application Management
-```bash
-# Login to ArgoCD CLI
-argocd login localhost:8090 --username admin --password <password>
-
-# List applications
-argocd app list
-
-# Get application status
-argocd app get cicd-demo
-
-# Sync application
-argocd app sync cicd-demo
-
-# Hard refresh
-argocd app sync cicd-demo --hard-refresh
-
-# View logs
-argocd app logs cicd-demo
-
-# Diff
-argocd app diff cicd-demo
-```
-
 ## Helm
 
 ### Chart Operations
