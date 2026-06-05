@@ -199,7 +199,7 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
    - Install suggested plugins
    - Create admin user
 
-3. **Access Harbor** at http://localhost:8082
+2. **Access Harbor** at http://localhost:8082
    - Login: admin / Harbor12345
    - Create project `cicd-demo`:
      - Click **Projects** > **NEW PROJECT**
@@ -215,7 +215,7 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
      - Username: `robot$robot-ci-cd-demo`
      - Password: (the token from script)
 
-4. **Configure Docker to use Harbor**
+3. **Configure Docker to use Harbor**
    ```bash
    # Add to Docker daemon.json:
    {
@@ -224,18 +224,18 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
    # Restart Docker Desktop
    ```
 
-5. **Access Grafana** at http://localhost:3000
+4. **Access Grafana** at http://localhost:3000
    - Login: admin / admin (change on first login)
    - Verify datasources: Loki and Prometheus should be pre-configured
    - Import dashboards or create custom queries
 
-6. **Access Policy Reporter** at http://localhost:31002 (optional)
+5. **Access Policy Reporter** at http://localhost:31002 (optional)
    - View Kyverno policy violations in real-time
    - Monitor cluster compliance status
    - Filter violations by namespace, policy, and severity
    - API available at http://localhost:31001
 
-7. **Deploy PostgreSQL Database**
+6. **Deploy PostgreSQL Database**
    ```bash
    ./scripts/deploy-fullstack.sh
    ```
@@ -243,14 +243,14 @@ For manual step-by-step setup, see [Lab Setup Guide](docs/Lab-Setup-Guide.md).
    - Creates cicd_demo database
    - Runs comprehensive validation
 
-8. **Verify Database Deployment**
+7. **Verify Database Deployment**
    ```bash
    ./scripts/test-deployment.sh
    ```
    - Runs 20 comprehensive tests
    - Validates pod, service, connectivity, security, functionality
 
-9. **Run your first pipeline**
+8. **Run your first pipeline**
    - Create Jenkins pipeline from Jenkinsfile
    - Trigger build
    - Watch it build backend (Spring Boot) → build frontend (React) → push to Harbor → deploy to Kind
@@ -361,7 +361,7 @@ Developer → GitHub → Jenkins → Maven → SonarQube
 ## Key Resources
 
 ### Essential Documentation
-- [📚 Documentation Index](docs/INDEX.md) - **Master index of all documentation**
+- [Documentation Index](docs/INDEX.md) - **Master index of all documentation**
 - [Architecture Diagram](docs/Architecture-Diagram.md) - Visual pipeline overview
 - [Lab Setup Guide](docs/Lab-Setup-Guide.md) - Complete setup instructions
 - [Port Reference](docs/Port-Reference.md) - All service ports and URLs
